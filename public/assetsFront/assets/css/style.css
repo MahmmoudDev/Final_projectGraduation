@@ -1,0 +1,1087 @@
+body {
+    font-family: monospace;
+}
+
+.page-with-navbar {
+
+    padding-top: 90px;
+}
+
+.hero-section {
+    height: 75vh;
+    background:
+        linear-gradient(rgba(0, 0, 0, 0.6),
+            rgba(0, 0, 0, 0.6)),
+        url('../img/hero.png');
+    background-size: cover;
+    background-position: center;
+}
+
+.hero-section h1 {
+    font-size: 58px;
+    font-weight: 700;
+    line-height: 1.3;
+}
+
+.hero-input {
+    height: 58px;
+    border-radius: 12px;
+    border: none;
+    padding-left: 20px;
+    font-size: 16px;
+}
+
+/* ================= CONTACT HERO ================= */
+
+.contact-hero {
+    background: linear-gradient(135deg,
+            #0d6efd,
+            #2d9cdb);
+
+    padding: 120px 0 80px;
+}
+
+/* ================= CONTACT CARDS ================= */
+
+.contact-card {
+    background: #fff;
+
+    border-radius: 20px;
+
+    padding: 35px 20px;
+
+    box-shadow: 0 8px 25px rgba(0, 0, 0, .08);
+
+    transition: .3s;
+}
+
+.contact-card:hover {
+    transform: translateY(-8px);
+}
+
+.contact-icon {
+    font-size: 40px;
+
+    margin-bottom: 15px;
+}
+
+/* ================= CONTACT FORM ================= */
+
+.contact-box {
+    background: #fff;
+
+    border-radius: 30px;
+
+    padding: 50px;
+
+    box-shadow: 0 8px 30px rgba(0, 0, 0, .08);
+}
+
+.contact-input {
+    height: 55px;
+
+    border-radius: 15px;
+
+    border: 1px solid #ddd;
+}
+
+textarea.contact-input {
+    height: auto;
+}
+
+.contact-btn {
+    border: none;
+
+    background: #0d6efd;
+
+    color: #fff;
+
+    padding: 14px 35px;
+
+    border-radius: 50px;
+
+    font-weight: 600;
+
+    transition: .3s;
+}
+
+.contact-btn:hover {
+    background: #0b5ed7;
+}
+
+/* ================= RIGHT BOX ================= */
+
+.contact-side-box {
+    background: #f8f9fa;
+
+    border-radius: 25px;
+
+    padding: 50px;
+
+    text-align: center;
+}
+
+/* ================= MOBILE ================= */
+
+@media(max-width:768px) {
+
+    .contact-box {
+        padding: 30px;
+    }
+
+    .contact-hero {
+        padding: 100px 0 60px;
+    }
+}
+
+/* ================= PROFILE ================= */
+
+.profile-section {
+    padding: 140px 0 80px;
+}
+
+.profile-card {
+    background: #fff;
+
+    border-radius: 30px;
+
+    padding: 50px;
+
+    box-shadow:
+        0 10px 35px rgba(0, 0, 0, .08);
+}
+
+.profile-title {
+    font-size: 38px;
+
+    font-weight: 700;
+}
+
+.profile-subtitle {
+    color: #777;
+}
+
+.profile-info-box {
+    background: #f8f9fa;
+
+    border-radius: 25px;
+
+    padding: 35px;
+}
+
+.profile-input {
+    height: 55px;
+
+    border-radius: 15px;
+
+    border: 1px solid #ddd;
+}
+
+.profile-actions {
+    display: flex;
+
+    gap: 15px;
+
+    flex-wrap: wrap;
+
+    justify-content: center;
+}
+
+.profile-btn-primary,
+.profile-btn-secondary,
+.profile-btn-danger {
+
+    border: none;
+
+    padding: 14px 30px;
+
+    border-radius: 50px;
+
+    font-weight: 600;
+
+    text-decoration: none;
+
+    transition: .3s;
+}
+
+.profile-btn-primary {
+    background: #0d6efd;
+    color: #fff;
+}
+
+.profile-btn-primary:hover {
+    background: #0b5ed7;
+}
+
+.profile-btn-secondary {
+    background: #198754;
+    color: #fff;
+}
+
+.profile-btn-secondary:hover {
+    background: #157347;
+}
+
+.profile-btn-danger {
+    background: #dc3545;
+    color: #fff;
+}
+
+.profile-btn-danger:hover {
+    background: #bb2d3b;
+}
+
+/* ================= MOBILE ================= */
+
+@media(max-width:768px) {
+
+    .profile-card {
+        padding: 30px;
+    }
+
+    .profile-actions {
+        flex-direction: column;
+    }
+}
+
+.hero-input:focus {
+    box-shadow: none;
+    border: 2px solid #00c6ff;
+}
+
+.hero-search-btn {
+    height: 58px;
+    border: none;
+    border-radius: 12px;
+    background: linear-gradient(45deg, #0d6efd, #00c6ff);
+    color: white;
+    font-weight: 600;
+    transition: 0.3s;
+}
+
+.hero-search-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(0, 198, 255, 0.4);
+}
+
+.card {
+    border: none;
+    border-radius: 20px;
+}
+
+.card img {
+    border-radius: 15px;
+}
+
+#scrollTopBtn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 50px;
+    height: 50px;
+    border: none;
+    border-radius: 50%;
+    background: #000;
+    color: #fff;
+    display: none;
+}
+
+.dark-mode-btn {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    border: none;
+    /* background: #f1f1f1; */
+    font-size: 18px;
+    transition: 0.3s;
+    margin-right: 10px
+}
+
+.dark-mode-btn:hover {
+    /* background: #0d6efd; */
+    color: white;
+    transform: rotate(180deg);
+}
+
+.dark-mode {
+
+    background: #121212;
+
+    color: white;
+}
+
+.dark-mode .navbar {
+
+    background: #1e1e1e !important;
+}
+
+.dark-mode .professional-card,
+.dark-mode .special-card {
+
+    background: #1f1f1f;
+
+    color: white;
+}
+
+.dark-mode .section-description,
+.dark-mode .professional-speciality {
+
+    color: #ccc;
+}
+
+/* Dark Mode Navbar */
+
+.dark-mode .navbar {
+
+    background: #1c1c1c !important;
+}
+
+/* Navbar Links */
+
+.dark-mode .nav-link {
+
+    color: white !important;
+}
+
+.dark-mode .nav-link:hover {
+
+    color: #00c6ff !important;
+}
+
+/* Logo Text */
+
+.dark-mode .navbar-brand {
+
+    color: white !important;
+}
+
+.nav-link {
+    position: relative;
+    font-weight: 500;
+    transition: 0.3s;
+}
+
+.nav-link::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -5px;
+    width: 0%;
+    height: 2px;
+    background: #0d6efd;
+    transition: 0.3s;
+}
+
+.nav-link:hover {
+    color: #0d6efd !important;
+}
+
+.nav-link:hover::after {
+    width: 100%;
+}
+
+.navbar {
+    backdrop-filter: blur(12px);
+    background: rgba(255, 255, 255, 0.92) !important;
+}
+
+.custom-btn {
+    padding: 10px 22px;
+    border-radius: 50px;
+    text-decoration: none;
+    transition: 0.3s;
+    font-weight: 500;
+}
+
+.custom-btn {
+    padding: 12px 28px;
+    border-radius: 12px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: 0.3s;
+    display: inline-block;
+}
+
+.login-btn {
+    background: white;
+    color: #0d6efd;
+    border: 2px solid #0d6efd;
+}
+
+.login-btn:hover {
+    background: #0d6efd;
+    color: white;
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(13, 110, 253, 0.3);
+}
+
+.register-btn {
+    background: linear-gradient(45deg, #0d6efd, #00c6ff);
+    color: white;
+    border: none;
+}
+
+.register-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(0, 198, 255, 0.4);
+    color: white;
+}
+
+.special-card {
+    background: white;
+    border-radius: 25px;
+    transition: 0.4s;
+    cursor: pointer;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+    height: 240px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.special-card:hover {
+    transform: translateY(-15px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+}
+
+.section-title {
+    font-size: 42px;
+    font-weight: 700;
+    margin-bottom: 15px;
+}
+
+.subtitle {
+    color: #777;
+    font-size: 18px;
+    margin: 0 auto;
+}
+
+.section-subtitle {
+    color: #777;
+    font-size: 18px;
+}
+
+.professional-card {
+    background: white;
+    border-radius: 25px;
+    overflow: hidden;
+    transition: 0.4s;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+}
+
+.professional-card:hover {
+    transform: translateY(-12px);
+    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.15);
+}
+
+.professional-img {
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+}
+
+.professional-name {
+    font-size: 26px;
+    font-weight: 700;
+}
+
+.professional-speciality {
+    color: #777;
+    margin-top: 10px;
+    margin-bottom: 20px;
+}
+
+.rating {
+    font-size: 18px;
+    color: #ffb400;
+}
+
+.rating span {
+    color: #555;
+    margin-left: 10px;
+}
+
+.book-btn {
+    background: linear-gradient(45deg, #0d6efd, #00c6ff);
+    color: white;
+    padding: 12px;
+    border-radius: 12px;
+    text-decoration: none;
+    transition: 0.3s;
+    font-weight: 600;
+}
+
+.book-btn:hover {
+    transform: translateY(-3px);
+    color: white;
+}
+
+.profile-btn {
+    border: 2px solid #0d6efd;
+    color: #0d6efd;
+    padding: 12px;
+    border-radius: 12px;
+    text-decoration: none;
+    transition: 0.3s;
+    font-weight: 600;
+}
+
+.profile-btn:hover {
+    background: #0d6efd;
+    color: white;
+}
+
+.view-all-btn {
+    display: inline-block;
+    padding: 14px 35px;
+    border-radius: 50px;
+    background: linear-gradient(45deg, #0d6efd, #00c6ff);
+    color: white;
+    text-decoration: none;
+    font-weight: 600;
+    transition: 0.3s;
+}
+
+.view-all-btn:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 15px 30px rgba(0, 198, 255, 0.35);
+    color: white;
+}
+
+.footer-section {
+    background: #101820;
+    padding: 30px 0;
+    color: white;
+}
+
+.footer-section p {
+    margin: 0;
+    font-size: 15px;
+}
+
+.copyright {
+    color: #bdbdbd;
+    margin-top: 5px;
+}
+
+.profile-hero {
+    padding: 150px 0 80px;
+}
+
+.profile-image {
+    width: 100%;
+    border-radius: 25px;
+    box-shadow: 0 10px 35px rgba(0, 0, 0, 0.15);
+}
+
+.doctor-name {
+    font-size: 52px;
+    font-weight: 700;
+}
+
+.doctor-speciality {
+    color: #0d6efd;
+    font-size: 22px;
+    margin-bottom: 20px;
+}
+
+.rating-box {
+    color: #ffb400;
+    font-size: 22px;
+}
+
+.about-text {
+    font-size: 18px;
+    line-height: 1.9;
+    color: #666;
+}
+
+.time-slots {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.time-btn {
+    border: none;
+    background: #f1f5ff;
+    padding: 14px 30px;
+    border-radius: 15px;
+    transition: 0.3s;
+}
+
+.time-btn:hover {
+    background: #0d6efd;
+    color: white;
+}
+
+.review-card {
+    background: white;
+    padding: 25px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+}
+
+.dark-mode .review-card {
+    background: #1f1f1f;
+    color: white;
+    border: 1px solid #333;
+}
+
+.dark-mode .review-card p,
+.dark-mode .review-card h5 {
+    color: white;
+}
+
+.dark-mode .review-rating {
+    color: #ffb400;
+}
+
+.dark-mode .about-text,
+.dark-mode .doctor-info p,
+.dark-mode .doctor-speciality {
+    color: #ddd;
+}
+
+.booking-section {
+
+    padding: 140px 0 80px;
+}
+
+.booking-card {
+
+    background: white;
+
+    border-radius: 25px;
+
+    padding: 30px;
+
+    text-align: center;
+
+    box-shadow: 0 10px 35px rgba(0, 0, 0, 0.08);
+}
+
+.booking-image {
+
+    width: 100%;
+
+    border-radius: 20px;
+}
+
+.booking-speciality {
+
+    color: #0d6efd;
+
+    font-size: 18px;
+}
+
+.booking-form-box {
+
+    background: white;
+
+    padding: 40px;
+
+    border-radius: 25px;
+
+    box-shadow: 0 10px 35px rgba(0, 0, 0, 0.08);
+}
+
+.booking-input {
+
+    height: 55px;
+
+    border-radius: 14px;
+}
+
+textarea.booking-input {
+
+    height: auto;
+}
+
+.confirm-btn {
+
+    width: 100%;
+
+    border: none;
+
+    background:
+        linear-gradient(45deg, #0d6efd, #00c6ff);
+
+    color: white;
+
+    padding: 15px;
+
+    border-radius: 15px;
+
+    font-size: 18px;
+
+    transition: 0.3s;
+}
+
+.confirm-btn:hover {
+
+    transform: translateY(-3px);
+}
+
+/* Dark Mode */
+
+.dark-mode .booking-card,
+.dark-mode .booking-form-box {
+
+    background: #1f1f1f;
+
+    color: white;
+}
+
+.dark-mode .booking-input {
+
+    background: #2a2a2a;
+
+    border: 1px solid #444;
+
+    color: white;
+}
+
+/* ==========================
+AUTH
+========================== */
+
+.auth-section {
+
+    background:
+        linear-gradient(rgba(0, 0, 0, 0.6),
+            rgba(0, 0, 0, 0.6)),
+        url('../assets/images/hero.png');
+
+    background-size: cover;
+    background-position: center;
+
+    min-height:
+        calc(100vh - 90px);
+
+    padding-top:
+        120px;
+
+    padding-bottom:
+        60px;
+}
+
+.auth-card {
+
+    background: white;
+
+    padding: 50px;
+
+    border-radius: 30px;
+
+    box-shadow:
+        0 15px 45px rgba(0, 0, 0, 0.15);
+
+    width: 100%;
+}
+
+.auth-text {
+
+    color: #777;
+}
+
+.auth-input {
+
+    height: 55px;
+
+    border-radius: 14px;
+}
+
+.auth-btn {
+
+    width: 100%;
+
+    border: none;
+
+    padding: 15px;
+
+    border-radius: 15px;
+
+    color: white;
+
+    font-size: 18px;
+
+    background:
+        linear-gradient(45deg, #0d6efd, #00c6ff);
+
+    transition: .3s;
+}
+
+.auth-btn:hover {
+
+    transform: translateY(-3px);
+}
+
+.forgot-link,
+.register-link {
+
+    text-decoration: none;
+
+    color: #0d6efd;
+
+    font-weight: 600;
+}
+
+/* Dark Mode */
+
+.dark-mode .auth-card {
+
+    background: #1f1f1f;
+
+    color: white;
+}
+
+.dark-mode .auth-input {
+
+    background: #2b2b2b;
+
+    border: 1px solid #444;
+
+    color: white;
+}
+
+.dark-mode .auth-text {
+
+    color: #ccc;
+}
+
+
+
+
+.appointments-hero {
+
+    background:
+        linear-gradient(rgba(0, 0, 0, .6),
+            rgba(0, 0, 0, .6)),
+        url('../img/hero.jpg');
+
+    background-size: cover;
+    background-position: center;
+
+    color: white;
+
+    padding: 150px 0 90px;
+}
+
+.appointment-card {
+
+    background: white;
+
+    border-radius: 25px;
+
+    padding: 30px;
+
+    box-shadow:
+        0 10px 35px rgba(0, 0, 0, .08);
+
+    transition: .3s;
+}
+
+.appointment-card:hover {
+
+    transform: translateY(-8px);
+}
+
+.dark-mode .appointment-card {
+
+    background: #1e1e1e;
+}
+
+
+/* ================= CONSULTATION ================= */
+
+.consultation-section {
+    padding: 140px 0 80px;
+}
+
+/* Header */
+
+.consultation-header {
+    background: linear-gradient(135deg,
+            #0d6efd,
+            #2d9cdb);
+
+    color: #fff;
+
+    border-radius: 25px;
+
+    padding: 30px 40px;
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    margin-bottom: 30px;
+}
+
+.status-badge {
+    background: #fff;
+
+    color: #0d6efd;
+
+    padding: 10px 25px;
+
+    border-radius: 50px;
+
+    font-weight: 600;
+}
+
+/* Cards */
+
+.consultation-card,
+.chat-card {
+
+    background: #fff;
+
+    border-radius: 30px;
+
+    padding: 35px;
+
+    box-shadow:
+        0 10px 35px rgba(0, 0, 0, .08);
+
+    margin-bottom: 30px;
+}
+
+/* Question / Answer */
+
+.qa-box {
+    border-radius: 20px;
+
+    padding: 25px;
+
+    margin-bottom: 20px;
+}
+
+.question-box {
+    background: #eef5ff;
+
+    border-left: 5px solid #0d6efd;
+}
+
+.answer-box {
+    background: #edfdf2;
+
+    border-left: 5px solid #198754;
+}
+
+/* Chat */
+
+.chat-box {
+    background: #f8f9fa;
+
+    border-radius: 20px;
+
+    padding: 25px;
+
+    height: 400px;
+
+    overflow-y: auto;
+}
+
+/* Message */
+
+.message {
+    display: flex;
+
+    margin-bottom: 20px;
+}
+
+.user-message {
+    justify-content: flex-end;
+}
+
+.doctor-message {
+    justify-content: flex-start;
+}
+
+.message-content {
+    max-width: 70%;
+
+    padding: 15px 20px;
+
+    border-radius: 20px;
+
+    font-size: 15px;
+}
+
+.user-message .message-content {
+
+    background: #0d6efd;
+
+    color: #fff;
+
+    border-bottom-right-radius: 5px;
+}
+
+.doctor-message .message-content {
+
+    background: #e9ecef;
+
+    color: #333;
+
+    border-bottom-left-radius: 5px;
+}
+
+/* Input */
+
+.chat-input-box {
+    display: flex;
+
+    gap: 15px;
+
+    margin-top: 25px;
+}
+
+.chat-input {
+    height: 55px;
+
+    border-radius: 15px;
+}
+
+.send-btn {
+    border: none;
+
+    background: #0d6efd;
+
+    color: #fff;
+
+    border-radius: 15px;
+
+    padding: 0 35px;
+
+    font-weight: 600;
+
+    transition: .3s;
+}
+
+.send-btn:hover {
+    background: #0b5ed7;
+}
+
+/* Mobile */
+
+@media(max-width:768px) {
+
+    .consultation-header {
+        flex-direction: column;
+        gap: 20px;
+        text-align: center;
+    }
+
+    .chat-input-box {
+        flex-direction: column;
+    }
+
+    .send-btn {
+        height: 55px;
+    }
+}

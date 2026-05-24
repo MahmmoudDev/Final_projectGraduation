@@ -1,0 +1,239 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Appointment;
+use App\Models\doctor;
+use App\Models\specialization;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+
+
+class DoctorController extends Controller
+{
+    /**
+     * Display a listing of the resource.
+     */
+    public function index()
+    {
+        //
+        $doctors = doctor::with('specialization')->get();
+        return response()->view('dashboard.doctor.index', ['doctors' => $doctors]);
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
+    {
+        //
+        $specializations = specialization::all();
+        return response()->view('dashboard.doctor.create', ['specializations' => $specializations]);
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(Request $request)
+    {
+        $validate = validator($request->all(), [
+            'name' => 'required|string|min:3|max:50',
+            'email' => 'required|email|unique:doctors,email',
+            'password' =>
+            'required|min:6',
+            'mobile' => 'required|string|unique:doctors,mobile',
+            'specialization_id' => 'required|numeric|exists:specializations,id',
+            'experience' => 'required|string|min:1|max:100',
+            'image' => 'nullable|image|mimes:jpg,png,jpeg',
+            'status' => 'required|in:active,inactive'
+        ]);
+
+        if ($validate->fails()) {
+            return response()->json([
+                'icon' => 'error',
+                'title' => 'Validation Error',
+                'text' =>
+                $validate->errors()->first(),
+                'password' =>
+                bcrypt(
+                    $request
+                        ->password
+                ),
+            ]);
+        }
+        $doctor = new doctor();
+        $doctor->name = $request->input('name');
+        $doctor->email =  $request->input('email');
+        $doctor->mobile =  $request->input('mobile');
+        $doctor->password =
+            Hash::make(
+                $request
+                    ->password
+            );
+        $doctor->specialization_id =  $request->input('specialization_id');
+        $doctor->experience = $request->input('experience');
+        $doctor->status = $request->input('status') === 'active';
+        if ($request->hasFile('image')) {
+            $imageFile = $request->file('image');
+            $name = time() . '.' . $imageFile->extension();
+            $imageFile->storeAs('doctors',  $name, 'public');
+            $doctor->image = $name;
+        }
+
+        $isSaved =
+            $doctor->save();
+        return response()->json([
+            'icon' =>
+            $isSaved ? 'success' : 'error',
+            'title' => $isSaved ? 'Created!' : 'Failed!',
+            'text' =>
+            $isSaved  ? 'Doctor created successfully.' : 'Failed to create doctor.'
+        ]);
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function show(doctor $doctor)
+    {
+        //
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(doctor $doctor)
+    {
+        //
+        $specializations = specialization::all();
+        return response()->view('dashboard.doctor.edit', ['doctor' => $doctor, 'specializations' => $specializations]);
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, doctor $doctor)
+    {
+        //
+        $validate = validator($request->all(), [
+            'name' => 'required|string|min:3|max:50',
+            'email' => 'required|email|unique:doctors,email,' . $doctor->id,
+            'mobile' => 'required|string|unique:doctors,mobile,' . $doctor->id,
+            'specialization_id' => 'required|numeric|exists:specializations,id',
+            'experience' => 'required|string|min:1|max:100',
+            'image' => 'nullable|image|mimes:jpg,png,jpeg',
+            'status' => 'required|in:active,inactive'
+        ]);
+
+
+        $doctor->name = $request->input('name');
+        $doctor->email =  $request->input('email');
+        $doctor->mobile =  $request->input('mobile');
+        if (
+            $request->filled(
+                'password'
+            )
+        ) {
+
+            $doctor->password =
+                Hash::make(
+                    $request
+                        ->password
+                );
+        }
+        $doctor->specialization_id =  $request->input('specialization_id');
+        $doctor->experience = $request->input('experience');
+        $doctor->status = $request->input('status') === 'active';
+        if ($request->hasFile('image')) {
+            $imageFile = $request->file('image');
+            $name = time() . '.' . $imageFile->extension();
+            $imageFile->storeAs('doctors',  $name, 'public');
+            $doctor->image = $name;
+        }
+        $isUpdated = $doctor->save();
+        return response()->json([
+            'icon' => $isUpdated ? 'success' : 'error',
+            'title' => $isUpdated ? 'Updated!' : 'Failed!',
+            'text' => $isUpdated ? 'Doctor updated successfully.' : 'Failed to update doctor.'
+        ]);
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy($id)
+    {
+        //
+        $doctor = doctor::findOrFail($id);
+        $deleted = $doctor->delete();
+        return response()->json([
+            'icon' => $deleted ? 'success' : 'error',
+            'title' => $deleted ? 'Deleted!' : 'Failed!',
+            'text' => $deleted ? 'Product deleted successfully.' : 'Failed to delete product.'
+        ]);
+    }
+
+    public function doctor_login(
+        Request $request
+    ) {
+        if (
+            Auth::guard(
+                'doctor'
+            )->attempt([
+
+                'email' =>
+                $request->email,
+
+                'password' =>
+                $request->password,
+
+            ])
+        ) {
+
+            return redirect()
+                ->route(
+                    'doctor.dashboard'
+                );
+        }
+
+        return back()->with(
+            'error',
+            'Invalid credentials'
+        );
+    }
+
+    public function dashboard()
+    {
+        $doctorId =
+            auth()
+            ->guard(
+                'doctor'
+            )
+            ->id();
+
+        $appointments =
+            Appointment::with(
+                'user'
+            )
+            ->where(
+                'service_type',
+                'doctor'
+            )
+
+            ->where(
+                'service_provider_id',
+                $doctorId
+            )
+
+            ->latest()
+            ->get();
+
+        return view(
+            'dashboard.doctor.dashboard',
+            compact(
+                'appointments'
+            )
+        );
+    }
+}
