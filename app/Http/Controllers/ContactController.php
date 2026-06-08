@@ -13,7 +13,7 @@ class ContactController extends Controller
     public function index()
     {
         //
-        $contact = Contact::all();
+        $contact = Contact::paginate(5);
         return response()->view('dashboard.contact.index', ['contact' => $contact]);
     }
 

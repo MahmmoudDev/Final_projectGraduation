@@ -35,6 +35,11 @@
                     value="{{ old('mobile') }}">
             </div>
             <div class="form-group mb-3">
+                <label>About Doctor</label>
+                <textarea rows="3" id="about_doctor" name="about_doctor" class="form-control contact-input" placeholder="About me">
+                </textarea>
+            </div>
+            <div class="form-group mb-3">
                 <label>Specialization</label>
                 <select name="specialization_id" class="form-control" id="doctor_specialization_id">
                     <option value="">Select Specialization</option>
@@ -89,7 +94,9 @@
             )
             .value
         );
+
         fromData.append('mobile', document.getElementById('doctor_mobile').value);
+        fromData.append('about_doctor', document.getElementById('about_doctor').value);
         fromData.append('specialization_id', document.getElementById('doctor_specialization_id').value);
         fromData.append('experience', document.getElementById('doctor_experience').value);
         fromData.append('image', document.getElementById('image-input').files[0]);

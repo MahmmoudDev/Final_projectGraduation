@@ -73,6 +73,10 @@
 
                 </table>
 
+                <div class="d-flex justify-content-center mt-4">
+                    {{ $lawyers->links('pagination::bootstrap-5') }}
+                </div>
+
             </div>
         </div>
 

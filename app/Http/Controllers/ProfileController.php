@@ -84,62 +84,23 @@ class ProfileController extends Controller
 
     public function my_appointments()
     {
-
         $appointments = DB::table('appointments')
-            ->where(
-                'user_id',
-                auth()->id()
-            )
-            ->get();
+            ->where('user_id', auth()->id())
+            ->latest()
+            ->paginate(5);
 
-        foreach (
-            $appointments
-            as $appointment
-        ) {
-
-            if (
-                $appointment
-                ->service_type
-                == 'doctor'
-            ) {
-
-                $doctor =
-                    DB::table('doctors')
-                    ->find(
-                        $appointment
-                            ->service_provider_id
-                    );
-
-                $appointment
-                    ->provider_name =
-                    $doctor?->name;
-            } elseif (
-                $appointment
-                ->service_type
-                == 'lawyer'
-            ) {
-
-                $lawyer =
-                    DB::table('lawyers')
-                    ->find(
-                        $appointment
-                            ->service_provider_id
-                    );
-
-                $appointment
-                    ->provider_name =
-                    $lawyer?->name;
+        foreach ($appointments as $appointment) {
+            if ($appointment->service_type == 'doctor') {
+                $doctor = DB::table('doctors')->find($appointment->service_provider_id);
+                $appointment->provider_name = $doctor?->name;
+            } elseif ($appointment->service_type == 'lawyer') {
+                $lawyer = DB::table('lawyers')->find($appointment->service_provider_id);
+                $appointment->provider_name = $lawyer?->name;
             }
         }
 
-        return view(
-            'front.pages.my_appiontments',
-            compact(
-                'appointments'
-            )
-        );
+        return view('front.pages.my_appiontments', compact('appointments'));
     }
-
     public function cancel_appointment($id)
     {
         $appointment = Appointment::where('user_id', auth()->id())->findOrFail($id);

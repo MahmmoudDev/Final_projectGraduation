@@ -18,7 +18,7 @@ class AppointmentController extends Controller
         $appointments =
             Appointment::with(
                 'user'
-            )->get();
+            )->paginate(5);
 
         foreach (
             $appointments

@@ -15,6 +15,8 @@ class UserController extends Controller
     {
         //
         $user = User::get();
+        $user = User::latest()->paginate(5);
+
         return response()->view('dashboard.user.index', ['users' => $user]);
     }
 

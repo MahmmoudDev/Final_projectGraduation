@@ -7,6 +7,8 @@
         @yield('title')
     </title>
 
+    
+
     @include('front.layouts.header-meta')
 
 </head>

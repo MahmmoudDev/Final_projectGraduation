@@ -21,7 +21,7 @@
                 <input type="email" name="email" class="form-control" id="doctor_email"
                     value="{{ old('email', $doctor->email) }}">
 
-                <div class="col-md-6">
+                {{-- <div class="col-md-6">
 
                     <label>
 
@@ -32,12 +32,20 @@
                     <input value="{{ old('password', $doctor->password) }}" type="password" id="password_doctor"
                         name="password" class="form-control">
 
-                </div>
+                </div> --}}
             </div>
             <div class="form-group mb-3">
                 <label>Mobile</label>
                 <input type="text" name="mobile" class="form-control" id="doctor_mobile"
                     value="{{ old('mobile', $doctor->mobile) }}">
+            </div>
+            <div class="form-group mb-3">
+                <label>About Doctor</label>
+                <textarea rows="3" id="about_doctor" name="about_doctor" class="form-control contact-input"
+                    placeholder="About me">
+                    {{ old('about_doctor', $doctor->about_doctor) }}
+                </textarea>
+
             </div>
             <div class="form-group mb-3">
                 <label>Specialization</label>
@@ -46,7 +54,7 @@
                     @foreach ($specializations as $spec)
                         <option value="{{ $spec->id }}"
                             {{ old('specialization_id', $doctor->specialization_id) == $spec->id ? 'selected' : '' }}>
-                            {{ $spec->type }}
+                            {{ $spec->name }}
                         </option>
                     @endforeach
                 </select>
@@ -100,8 +108,9 @@
 
         formData.append('name', document.getElementById('doctor_name').value);
         formData.append('email', document.getElementById('doctor_email').value);
-        fromData.append('password', document.getElementById('password_doctor').value);
+        // fromData.append('password', document.getElementById('password_doctor').value);
         formData.append('mobile', document.getElementById('doctor_mobile').value);
+        formData.append('about_doctor', document.getElementById('about_doctor').value);
         formData.append('specialization_id', document.getElementById('doctor_specialization_id').value);
         formData.append('experience', document.getElementById('doctor_experience').value);
         if (document.getElementById('image-input').files[0]) {
@@ -134,9 +143,9 @@
                     toast: true,
                     position: 'top-end',
                     icon: 'error',
-                    title: Object.values(error.response.data.errors)
-                        .flat()
-                        .join(' | '),
+                    // title: Object.values(error.response.data.errors)
+                    //     .flat()
+                    //     .join(' | '),
                     showConfirmButton: false,
                     timer: 4000,
                     timerProgressBar: true

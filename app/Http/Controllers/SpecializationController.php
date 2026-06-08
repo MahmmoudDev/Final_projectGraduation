@@ -13,7 +13,7 @@ class SpecializationController extends Controller
     public function index()
     {
         //
-        $spe = specialization::withoutTrashed()->get();
+        $spe = specialization::withoutTrashed()->paginate(5);
         return response()->view('dashboard.specialization.index', ['specializations' => $spe]);
     }
 

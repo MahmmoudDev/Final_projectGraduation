@@ -9,6 +9,7 @@ use App\Http\Controllers\DoctorController;
 use App\Http\Controllers\LawyerController;
 use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\AvailabilitieController;
+use App\Http\Controllers\ConsultationMessagesController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\ConsultationsController;
 use App\Http\Controllers\ProfileController;
@@ -46,6 +47,8 @@ Route::controller(HomeController::class)->group(function () {
 
     Route::post('/contact-us', 'store_contact')
         ->name('front.contact.store');
+
+    Route::get('/search', [HomeController::class, 'search'])->name('front.search');
 });
 
 
@@ -76,6 +79,16 @@ Route::middleware('auth:web')->group(function () {
 
     Route::post('/lawyer-booking/{id}', [HomeController::class, 'store_lawyer_booking'])
         ->name('lawyer.booking.store');
+
+    Route::get(
+        '/doctor/{id}/available-times',
+        [HomeController::class, 'getAvailableTimes']
+    )->name('doctor.available.times');
+
+    Route::get(
+        '/consultation-room/{appointment}',
+        [HomeController::class, 'consultationRoom']
+    )->name('front.consultation.room');
 });
 
 
@@ -126,7 +139,7 @@ Route::prefix('admin')
 
         Route::resource('availabilities', AvailabilitieController::class);
 
-        Route::resource('consultations', ConsultationsController::class);
+
 
         Route::resource('users', UserController::class);
 
@@ -153,11 +166,6 @@ Route::prefix('doctor')
             [DoctorController::class, 'dashboard']
         )->name('doctor.dashboard');
 
-        Route::get(
-            '/profile',
-            [DoctorController::class, 'profile']
-        )->name('doctor.profile');
-
         Route::put(
             '/appointment-approve/{id}',
             [DoctorController::class, 'approve_appointment']
@@ -167,10 +175,26 @@ Route::prefix('doctor')
             '/appointment-reject/{id}',
             [DoctorController::class, 'reject_appointment']
         )->name('doctor.appointment.reject');
+
+        Route::resource(
+            'consultations',
+            ConsultationsController::class
+        )->names('doctor.consultations');
+
+        Route::get('/edit-myprofile', [DoctorController::class, 'edit_myprofile'])->name('doctor.myprofile');
+        Route::put('/update-myprofile', [DoctorController::class, 'update_profile'])->name('update.myprofile');
+
+        Route::get(
+            '/dashboard/search',
+            [Dashboard::class, 'search']
+        )->name('doctor.search');
     });
 
 
-
+Route::get(
+    '/dashboard/search',
+    [Dashboard::class, 'search']
+)->name('admin.search');
 
 Route::prefix('lawyer')
     ->middleware('auth:lawyer')
@@ -195,7 +219,35 @@ Route::prefix('lawyer')
             '/appointment-reject/{id}',
             [LawyerController::class, 'reject_appointment']
         )->name('lawyer.appointment.reject');
+        Route::resource(
+            'consultations',
+            ConsultationsController::class
+        )->names('lawyer.consultations');
+
+        Route::get('/edit-myprofile', [LawyerController::class, 'edit_myprofile'])->name('doctor.myprofile');
+        Route::put('/update-myprofile', [LawyerController::class, 'update_profile'])->name('update.myprofile');
+
+        Route::get(
+            '/dashboard/search',
+            [Dashboard::class, 'search']
+        )->name('lawyer.search');
     });
 
+
+Route::post(
+    '/consultation-messages',
+    [ConsultationMessagesController::class, 'storeUser']
+)->name('consultation.messages.store');
+
+
+Route::post(
+    '/dashboard/consultation-messages',
+    [ConsultationMessagesController::class, 'storeProvider']
+)->name('consultation.messages.provider.store');
+
+Route::get(
+    '/consultation/{id}/messages',
+    [ConsultationMessagesController::class, 'getMessages']
+)->name('consultation.messages.index');
 
 require __DIR__ . '/auth.php';

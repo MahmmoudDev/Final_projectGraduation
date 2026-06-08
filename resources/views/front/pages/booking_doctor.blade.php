@@ -48,7 +48,7 @@
                                 </div>
                             @endif
 
-                            <form method="POST" action="{{ route('front.booking_doctor', $doctor->id) }}">
+                            <form method="POST" action="{{ route('doctor.booking.store', $doctor->id) }}">
 
                                 @csrf
 
@@ -109,55 +109,69 @@
                                         Select Date
                                     </label>
 
-                                    <input type="date" name="appointment_date" class="form-control" required
-                                        min="{{ now()->format('Y-m-d') }}">
+                                    <div class="mb-3">
+
+
+
+                                        <select name="appointment_day" class="form-control" required>
+
+                                            <option value="">
+                                                Select Day
+                                            </option>
+
+                                            @php
+
+                                                $days = [
+                                                    'Sunday',
+                                                    'Monday',
+                                                    'Tuesday',
+                                                    'Wednesday',
+                                                    'Thursday',
+                                                    'Friday',
+                                                    'Saturday',
+                                                ];
+
+                                                $from = array_search($doctor->availabilities->first()->day_from, $days);
+
+                                                $to = array_search($doctor->availabilities->first()->day_to, $days);
+
+                                            @endphp
+
+                                            @for ($i = $from; $i <= $to; $i++)
+                                                <option value="{{ $days[$i] }}">
+
+                                                    {{ $days[$i] }}
+
+                                                </option>
+                                            @endfor
+
+                                        </select>
+
+                                    </div>
 
                                 </div>
 
+                                <div class="mb-3">
+                                    <label>Select Time</label>
 
-
-                                <!-- Available Time -->
-
-                                <div class="mb-4">
-
-                                    <label class="form-label">
-
-                                        Available Time
-
-                                    </label>
-
-                                    <select name="availability_id" class="form-control
-    booking-input" required>
+                                    <select name="appointment_time" class="form-control" required>
 
                                         <option value="">
-
-                                            Select Available Time
-
+                                            Select Time
                                         </option>
 
-                                        @foreach ($doctor->availabilities as $availability)
-                                            <option value="{{ $availability->id }}">
-
-                                                {{ $availability->day_from }}
-
-                                                →
-
-                                                {{ $availability->day_to }}
-
-                                                |
-
-                                                {{ \Carbon\Carbon::parse($availability->start_time)->format('h:i A') }}
-
-                                                -
-
-                                                {{ \Carbon\Carbon::parse($availability->end_time)->format('h:i A') }}
-
+                                        @foreach ($times as $time)
+                                            <option value="{{ $time['value'] }}">
+                                                {{ $time['label'] }}
                                             </option>
                                         @endforeach
 
                                     </select>
-
                                 </div>
+
+
+
+
                                 <button type="submit" class="confirm-btn">
 
                                     Confirm Appointment

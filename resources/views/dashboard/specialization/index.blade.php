@@ -42,8 +42,9 @@
                                 <td>{{ $item->name }}</td>
                                 <td>
                                     @if ($item->image)
-                                        <img src="{{ asset('storage/specialization/' . $item->image) }}" alt="specialization Image"
-                                            class="img-thumbnail" style="width: 80px; height: 80px; object-fit: cover;">
+                                        <img src="{{ asset('storage/specialization/' . $item->image) }}"
+                                            alt="specialization Image" class="img-thumbnail"
+                                            style="width: 80px; height: 80px; object-fit: cover;">
                                     @else
                                         <span>No Image</span>
                                     @endif
@@ -65,6 +66,10 @@
                     </tbody>
 
                 </table>
+
+                <div class="d-flex justify-content-center mt-4">
+                    {{ $specializations->links('pagination::bootstrap-5') }}
+                </div>
 
             </div>
         </div>

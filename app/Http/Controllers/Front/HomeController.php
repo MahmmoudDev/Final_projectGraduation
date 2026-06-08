@@ -11,18 +11,49 @@ use Illuminate\View\View;
 use App\Models\Contact;
 use App\Models\Appointment;
 use App\Models\availabilitie;
+use App\Models\consultations;
+use App\Notifications\NewBookingNotification;
 
 class HomeController extends Controller
 {
     public function index()
     {
-        $specialization = specialization::limit(4)->withoutTrashed()->get();
-        $doctors = doctor::limit(3)->with('specialization')->get();
-        $lawyers = lawyer::limit(3)->with('specialization')->get();
+        $specialization = specialization::limit(4)
+            ->withoutTrashed()
+            ->get();
+
+        $doctors = doctor::limit(3)
+            ->with('specialization')
+            ->get();
+
+        $lawyers = lawyer::limit(3)
+            ->with('specialization')
+            ->get();
+
+        $recommendedDoctors = doctor::with('specialization')
+            ->where('experience', '>=', 10)
+            ->orderByDesc('experience')
+            ->take(3)
+            ->get();
+
+        $recommendedLawyers = lawyer::with('specialization')
+            ->where('experience', '>=', 10)
+            ->orderByDesc('experience')
+            ->take(3)
+            ->get();
+
         return view('front.index', [
+
             'specialization' => $specialization,
+
             'doctor' => $doctors,
-            'lawyers' => $lawyers
+
+            'lawyers' => $lawyers,
+
+            'recommendedDoctors' => $recommendedDoctors,
+
+            'recommendedLawyers' => $recommendedLawyers,
+
         ]);
     }
 
@@ -78,326 +109,178 @@ class HomeController extends Controller
     {
         return view('front.pages.contact');
     }
-    public function store_contact(
-        Request $request
-    ) {
+
+    public function store_contact(Request $request)
+    {
         $request->validate([
-
-            'name' =>
-            'required',
-
-            'email' =>
-            'required|email',
-
-            'subject' =>
-            'required',
-
-            'message' =>
-            'required',
-
+            'name' => 'required',
+            'email' => 'required|email',
+            'subject' => 'required',
+            'message' => 'required',
         ]);
 
         Contact::create([
-
-            'name' =>
-            $request->name,
-
-            'email' =>
-            $request->email,
-
-            'subject' =>
-            $request->subject,
-
-            'message' =>
-            $request->message,
-
+            'name' => $request->name,
+            'email' => $request->email,
+            'subject' => $request->subject,
+            'message' => $request->message,
         ]);
 
-        return redirect()
-            ->back()
-            ->with(
-                'success',
-                'Message sent successfully!'
-            );
+        return redirect()->back()->with('success', 'Message sent successfully!');
     }
 
-    public function
-    doctor_booking(
-        $id
-    ) {
-        $doctor =
-            doctor::with(
-                'availabilities',
-                'specialization'
-            )->findOrFail(
-                $id
+    public function doctor_booking($id)
+    {
+        $doctor = doctor::with('availabilities')->findOrFail($id);
+
+        $availability = $doctor->availabilities->first();
+
+        $times = [];
+
+        if ($availability) {
+
+            $start = \Carbon\Carbon::parse(
+                $availability->start_time
             );
+
+            $end = \Carbon\Carbon::parse(
+                $availability->end_time
+            );
+
+            while ($start <= $end) {
+
+                $times[] = [
+
+                    'value' => $start->format('H:i:s'),
+
+                    'label' => $start->format('h:i A')
+
+                ];
+
+                $start->addHour();
+            }
+        }
 
         return view(
             'front.pages.booking_doctor',
             compact(
-                'doctor'
+                'doctor',
+                'times'
             )
         );
     }
 
+    public function lawyer_booking($id)
+    {
+        $lawyer = lawyer::with('availabilities')->findOrFail($id);
 
+        $availability = $lawyer->availabilities->first();
 
-    public function
-    store_doctor_booking(
-        Request $request,
-        $id
-    ) {
+        $times = [];
 
-        $request->validate([
+        if ($availability) {
 
-            'availability_id'
-            =>
-            'required|exists:availabilities,id',
-            'appointment_date'
-            =>
-            'required|date',
-
-        ]);
-
-
-
-        $availability =
-            availabilitie::findOrFail(
-                $request
-                    ->availability_id
-            );
-
-        $selectedDay =
-            strtolower(
-                date(
-                    'l',
-                    strtotime(
-                        $request
-                            ->appointment_date
-                    )
-                )
-            );
-
-        $dayFrom =
-            strtolower(
-                $availability
-                    ->day_from
-            );
-
-        $dayTo =
-            strtolower(
-                $availability
-                    ->day_to
-            );
-
-        $allowedDays = [
-
-            'sunday',
-            'monday',
-            'tuesday',
-            'wednesday',
-            'thursday',
-            'friday',
-            'saturday'
-
-        ];
-
-        $fromIndex =
-            array_search(
-                $dayFrom,
-                $allowedDays
-            );
-
-        $toIndex =
-            array_search(
-                $dayTo,
-                $allowedDays
-            );
-
-        $selectedIndex =
-            array_search(
-                $selectedDay,
-                $allowedDays
-            );
-
-        if (
-
-            $selectedIndex < $fromIndex ||
-
-            $selectedIndex > $toIndex
-
-        ) {
-
-            return back()->with(
-                'error',
-                'Doctor is not available on this day.'
-            );
-        }
-
-        $existsAppointment =
-            Appointment::where(
-                'service_provider_id',
-                $id
-            )
-
-            ->where(
-                'service_type',
-                'doctor'
-            )
-
-            ->whereDate(
-                'appointment_date',
-                today()
-            )
-
-            ->where(
-                'appointment_time',
+            $start = \Carbon\Carbon::parse(
                 $availability->start_time
-            )
-
-            ->whereNotIn(
-                'status',
-                [
-                    'cancelled',
-                    'rejected'
-                ]
-            )
-
-            ->exists();
-
-        Appointment::create([
-
-            'user_id' =>
-            auth()->id(),
-
-            'service_provider_id' =>
-            $id,
-
-            'service_type' =>
-            'doctor',
-
-            'appointment_date' =>
-            $request->appointment_date,
-
-            'appointment_time' =>
-            $availability
-                ->start_time,
-
-            'status' =>
-            'pending',
-
-        ]);
-
-        return redirect()
-            ->route(
-                'myAppiontments'
-            )
-            ->with(
-                'success',
-                'Appointment booked successfully!'
             );
-    }
-    public function
-    lawyer_booking(
-        $id
-    ) {
-        $lawyer =
-            lawyer::with(
-                'availabilities',
-                'specialization'
-            )->findOrFail(
-                $id
+
+            $end = \Carbon\Carbon::parse(
+                $availability->end_time
             );
+
+            while ($start <= $end) {
+
+                $times[] = [
+
+                    'value' => $start->format('H:i:s'),
+
+                    'label' => $start->format('h:i A')
+
+                ];
+
+                $start->addHour();
+            }
+        }
 
         return view(
             'front.pages.booking_lawyer',
             compact(
-                'lawyer'
+                'lawyer',
+                'times'
             )
         );
     }
-    public function
-    store_lawyer_booking(
-        Request $request,
-        $id
-    ) {
+
+    public function store_doctor_booking(Request $request, $id)
+    {
         $request->validate([
-
-            'availability_id'
-            =>
-            'required|exists:availabilities,id',
-
+            'appointment_day'  => 'required',
+            'appointment_time' => 'required',
         ]);
 
+        $doctor = doctor::findOrFail($id);
 
-        $availability =
-            availabilitie::findOrFail(
-                $request
-                    ->availability_id
-            );
+        $appointmentDate = now()
+            ->next($request->appointment_day)
+            ->format('Y-m-d');
 
-
-
-        $existsAppointment =
-            Appointment::where(
-                'service_provider_id',
-                $id
-            )
-
+        $exists = Appointment::where(
+            'service_provider_id',
+            $id
+        )
             ->where(
                 'service_type',
-                'lawyer'
+                'doctor'
             )
-
-            ->whereDate(
+            ->where(
                 'appointment_date',
-                $request->appointment_date
+                $appointmentDate
             )
-
             ->where(
                 'appointment_time',
-                $availability->start_time
+                $request->appointment_time
             )
-
-            ->whereNotIn(
+            ->whereIn(
                 'status',
                 [
-                    'cancelled',
-                    'rejected'
+                    'pending',
+                    'approved'
                 ]
             )
-
             ->exists();
 
-        Appointment::create([
+        if ($exists) {
 
-            'user_id' =>
-            auth()->id(),
+            return back()->with(
+                'error',
+                'This appointment is already booked.'
+            );
+        }
 
-            'service_provider_id' =>
-            $id,
+        $appointment = Appointment::create([
 
-            'service_type' =>
-            'lawyer',
+            'user_id' => auth()->id(),
 
-            'appointment_date' =>
-            now()
-                ->format(
-                    'Y-m-d'
-                ),
+            'service_provider_id' => $id,
 
-            'appointment_time' =>
-            $availability
-                ->start_time,
+            'service_type' => 'doctor',
 
-            'status' =>
-            'pending',
+            'appointment_date' => $appointmentDate,
 
+            'appointment_time' => $request->appointment_time,
 
+            'status' => 'pending',
 
         ]);
 
+        if ($doctor) {
+
+            $doctor->notify(
+                new NewBookingNotification(
+                    $appointment
+                )
+            );
+        }
 
         return redirect()
             ->route(
@@ -407,5 +290,127 @@ class HomeController extends Controller
                 'success',
                 'Appointment booked successfully!'
             );
+    }
+
+    public function store_lawyer_booking(Request $request, $id)
+    {
+        $request->validate([
+            'appointment_day'  => 'required',
+            'appointment_time' => 'required',
+        ]);
+
+        $lawyer = lawyer::findOrFail($id);
+
+        $appointmentDate = now()
+            ->next($request->appointment_day)
+            ->format('Y-m-d');
+
+        $exists = Appointment::where(
+            'service_provider_id',
+            $id
+        )
+            ->where(
+                'service_type',
+                'doctor'
+            )
+            ->where(
+                'appointment_date',
+                $appointmentDate
+            )
+            ->where(
+                'appointment_time',
+                $request->appointment_time
+            )
+            ->whereIn(
+                'status',
+                [
+                    'pending',
+                    'approved'
+                ]
+            )
+            ->exists();
+
+        if ($exists) {
+
+            return back()->with(
+                'error',
+                'This appointment is already booked.'
+            );
+        }
+
+        $appointment = Appointment::create([
+
+            'user_id' => auth()->id(),
+
+            'service_provider_id' => $id,
+
+            'service_type' => 'lawyer',
+
+            'appointment_date' => $appointmentDate,
+
+            'appointment_time' => $request->appointment_time,
+
+            'status' => 'pending',
+
+        ]);
+
+        if ($lawyer) {
+
+            $lawyer->notify(
+                new NewBookingNotification(
+                    $appointment
+                )
+            );
+        }
+
+        return redirect()
+            ->route(
+                'myAppiontments'
+            )
+            ->with(
+                'success',
+                'Appointment booked successfully!'
+            );
+    }
+
+
+    public function search(Request $request)
+    {
+        $search = $request->search;
+        $type = $request->type;
+
+        if ($type == 'doctor') {
+            $results = doctor::with('specialization')->where('name', 'like', "%{$search}%")
+                ->orWhereHas('specialization', function ($query) use ($search) {
+                    $query->where('name', 'like', "%{$search}%");
+                })->get();
+        } else {
+            $results = lawyer::with('specialization')->where('name', 'like', "%{$search}%")
+                ->orWhereHas('specialization', function ($query) use ($search) {
+                    $query->where('name', 'like', "%{$search}%");
+                })->get();
+        }
+
+        return view('front.pages.search_results', compact('results', 'type'));
+    }
+
+    public function consultationRoom($appointmentId)
+    {
+        $consultation = consultations::with([
+            'user',
+            'doctor',
+            'lawyer',
+            'messages'
+        ])
+            ->where(
+                'appointment_id',
+                $appointmentId
+            )
+            ->firstOrFail();
+
+        return view(
+            'front.pages.consultation-room',
+            compact('consultation')
+        );
     }
 }

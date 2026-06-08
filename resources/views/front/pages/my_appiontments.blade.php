@@ -29,9 +29,18 @@
         </section>
 
 
+
+
         <section class="container py-5">
 
             <div class="appointments-table-card">
+                @if (session('success'))
+                    <div class="alert alert-success">
+
+                        {{ session('success') }}
+
+                    </div>
+                @endif
 
                 <div class="table-responsive">
 
@@ -66,6 +75,8 @@
                                 <th>
                                     Action
                                 </th>
+
+
 
                             </tr>
 
@@ -121,7 +132,8 @@
                                     <td>
 
                                         @if ($appointment->status == 'pending')
-                                            <span class="badge
+                                            <span
+                                                class="badge
                     bg-warning
                     text-dark">
 
@@ -135,6 +147,15 @@
                                                 Approved
 
                                             </span>
+
+                                            @if ($appointment->status == 'approved')
+                                                <a href="{{ route('front.consultation.room', $appointment->id) }}"
+                                                    class="btn btn-success btn-sm">
+
+                                                    Consultation Room
+
+                                                </a>
+                                            @endif
                                         @else
                                             <span class="badge
                     bg-danger">
@@ -153,6 +174,9 @@
                                         </button>
 
                                     </td>
+
+
+
 
                                 </tr>
 
@@ -173,6 +197,10 @@
                         </tbody>
 
                     </table>
+
+                    <div class="d-flex justify-content-center mt-4">
+                        {{ $appointments->links('pagination::bootstrap-5') }}
+                    </div>
 
                 </div>
 

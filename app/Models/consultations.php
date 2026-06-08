@@ -36,7 +36,8 @@ class consultations extends Model
     public function messages()
     {
         return $this->hasMany(
-            consultation_messages::class
+            consultation_messages::class,
+            'consultation_id'
         );
     }
     public function doctor()

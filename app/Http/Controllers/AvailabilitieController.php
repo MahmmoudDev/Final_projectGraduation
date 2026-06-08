@@ -15,7 +15,7 @@ class AvailabilitieController extends Controller
     public function index()
     {
         //
-        $availabilitie = availabilitie::all();
+        $availabilitie = availabilitie::latest()->paginate(5);
         return response()->view('dashboard.availabilitie.index', ['availabilitie' => $availabilitie]);
     }
 

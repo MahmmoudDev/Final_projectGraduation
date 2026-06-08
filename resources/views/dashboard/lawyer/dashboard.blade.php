@@ -51,21 +51,31 @@
                                 </td>
 
                                 <td>
-
                                     @if ($appointment->status == 'pending')
-                                        <span class="badge bg-warning">
-                                            Pending
-                                        </span>
-                                    @elseif($appointment->status == 'approved')
-                                        <span class="badge bg-success">
-                                            Approved
-                                        </span>
-                                    @else
-                                        <span class="badge bg-danger">
-                                            Rejected
-                                        </span>
-                                    @endif
+                                        <form
+                                            action="{{ Auth::guard('lawyer')->check() ? route('lawyer.appointment.approve', $appointment->id) : route('doctor.appointment.approve', $appointment->id) }}"
+                                            method="POST" class="d-inline">
+                                            @csrf
+                                            @method('PUT')
+                                            <button type="submit" class="btn btn-sm btn-success me-1">
+                                                <i class="bi bi-check-circle"></i> قبول
+                                            </button>
+                                        </form>
 
+                                        <form
+                                            action="{{ Auth::guard('lawyer')->check() ? route('lawyer.appointment.reject', $appointment->id) : route('doctor.appointment.reject', $appointment->id) }}"
+                                            method="POST" class="d-inline">
+                                            @csrf
+                                            @method('PUT')
+                                            <button type="submit" class="btn btn-sm btn-danger">
+                                                <i class="bi bi-x-circle"></i> رفض
+                                            </button>
+                                        </form>
+                                    @elseif($appointment->status == 'approved')
+                                        <span class="badge bg-success">Approved</span>
+                                    @else
+                                        <span class="badge bg-danger">Rejected</span>
+                                    @endif
                                 </td>
 
                             </tr>

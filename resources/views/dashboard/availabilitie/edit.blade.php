@@ -185,7 +185,7 @@
                     ) {
 
                         $.ajax({
-                            url: "{{ route('getSpecialization') }}",
+                            url: "{{ route('get.specializations') }}",
                             type: "GET",
                             data: {
                                 type: selectedType

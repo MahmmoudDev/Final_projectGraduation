@@ -1,11 +1,23 @@
 <script src="{{ asset('adminlte/js/overlayscrollbars.browser.es6.min.js') }}" crossorigin="anonymous"></script>
 <script src="{{ asset('adminlte/js/popper.min.js') }}" crossorigin="anonymous"></script>
 <script src="{{ asset('adminlte/js/bootstrap.min.js') }}" crossorigin="anonymous"></script>
-<script src="{{ asset('adminlte/./js/adminlte.js') }}"></script>
+<script src="{{ asset('adminlte/js/adminlte.js') }}"></script>
 
 
 <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
+<script>
+    import axios from 'axios';
 
+    window.axios = axios;
+
+    window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+
+    const token = document
+        .querySelector('meta[name="csrf-token"]')
+        .getAttribute('content');
+
+    window.axios.defaults.headers.common['X-CSRF-TOKEN'] = token;
+</script>
 <script>
     const SELECTOR_SIDEBAR_WRAPPER = '.sidebar-wrapper';
     const Default = {

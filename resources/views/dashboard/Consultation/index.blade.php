@@ -15,9 +15,7 @@
                 <h3 class="card-title">
                     Consultations Table
                 </h3>
-                <a href="#" class="btn btn-primary ms-auto">
-                    + Create Consultation
-                </a>
+
             </div>
             <div class="card-body">
                 <table class="table table-bordered table-hover text-center align-middle">
@@ -35,76 +33,57 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>1</td>
-                            <td>
-                                Mahmoud Akram
-                            </td>
-                            <td>
-                                Dr. Ahmad Ali
-                            </td>
-                            <td>
-                                Doctor
-                            </td>
-                            <td>
-                                Chest pain
-                            </td>
-                            <td>
-                                <span class="badge bg-warning">
-                                    Pending
-                                </span>
-                            </td>
-                            <td>
-                                2026-05-20
-                            </td>
-                            <td>
-                                <a href="{{ route('consultations.show', 1) }}" class="btn btn-primary btn-sm">
-                                    Open Chat
-                                </a>
-                            </td>
-                        </tr>
+
+                        @foreach ($consultations as $item)
+                            <tr>
+
+                                <td>{{ $loop->iteration }}</td>
+
+                                <td>{{ $item->user->name }}</td>
+
+                                <td>
+                                    @if ($item->service_type == 'doctor')
+                                        Dr. {{ $item->doctor->name }}
+                                    @else
+                                        {{ $item->lawyer->name }}
+                                    @endif
+                                </td>
+
+                                <td>{{ ucfirst($item->service_type) }}</td>
+
+                                <td>{{ Str::limit($item->question, 30) }}</td>
+
+                                <td>
+                                    <span
+                                        class="badge bg-{{ $item->status == 'pending' ? 'warning' : ($item->status == 'answered' ? 'success' : 'secondary') }}">
+                                        {{ $item->status }}
+                                    </span>
+                                </td>
+
+                                <td>{{ $item->created_at->format('Y-m-d') }}</td>
+
+                                <td>
+
+                                    @if (auth('doctor')->check())
+                                        <a href="{{ route('doctor.consultations.show', $item->id) }}"
+                                            class="btn btn-primary btn-sm">
+                                            Open Chat
+                                        </a>
+                                    @else
+                                        <a href="{{ route('lawyer.consultations.show', $item->id) }}"
+                                            class="btn btn-primary btn-sm">
+                                            Open Chat
+                                        </a>
+                                    @endif
+
+                                </td>
+
+                            </tr>
+                        @endforeach
+
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
-@endsection
-
-@section('js')
-    <script>
-        // function deleteAdmin(id, reference) {
-        //     Swal.fire({
-        //         title: 'Are you sure?',
-        //         text: "You won't be able to Delete this Admin!",
-        //         icon: 'warning',
-        //         showCancelButton: true,
-        //         confirmButtonText: 'Yes, delete it!',
-        //         cancelButtonText: 'No',
-        //         reverseButtons: true
-        //     }).then((result) => {
-        //         if (result.isConfirmed) {
-        //             axios.delete(`/admin/admins/${id}`)
-        //                 .then((response) => {
-
-        //                     reference.closest('tr').remove();
-
-        //                     Swal.fire({
-        //                         icon: response.data.icon,
-        //                         title: response.data.title,
-        //                         text: response.data.text,
-        //                     });
-
-        //                 })
-        //                 .catch((error) => {
-        //                     Swal.fire({
-        //                         icon: 'error',
-        //                         title: 'Failed!',
-        //                         text: 'Delete failed.',
-        //                     });
-        //                     console.log(error.response);
-        //                 });
-        //         }
-        //     });
-        // }
-    </script>
 @endsection

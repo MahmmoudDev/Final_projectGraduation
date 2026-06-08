@@ -26,6 +26,15 @@
                 <input type="text" name="mobile" class="form-control" id="lawyer_mobile"
                     value="{{ old('mobile', $lawyer->mobile) }}">
             </div>
+
+            <div class="form-group mb-3">
+                <label>About Lawyer</label>
+                <textarea rows="3" id="about_lawyer" name="about_lawyers" class="form-control contact-input"
+                    placeholder="About me">
+                    {{ old('about_lawyer', $lawyer->about_lawyers) }}
+                </textarea>
+
+            </div>
             <div class="form-group mb-3">
                 <label>Specialization</label>
                 <select name="specialization_id" class="form-control" id="lawyer_specialization_id">
@@ -33,7 +42,7 @@
                     @foreach ($specializations as $spec)
                         <option value="{{ $spec->id }}"
                             {{ old('specialization_id', $lawyer->specialization_id) == $spec->id ? 'selected' : '' }}>
-                            {{ $spec->type }}
+                            {{ $spec->name }}
                         </option>
                     @endforeach
                 </select>
@@ -90,6 +99,7 @@
         formData.append('mobile', document.getElementById('lawyer_mobile').value);
         formData.append('specialization_id', document.getElementById('lawyer_specialization_id').value);
         formData.append('experience', document.getElementById('lawyer_experience').value);
+        formData.append('about_lawyers', document.getElementById('about_lawyer').value);
         if (document.getElementById('image-input').files[0]) {
             formData.append('image', document.getElementById('image-input').files[0]);
         }

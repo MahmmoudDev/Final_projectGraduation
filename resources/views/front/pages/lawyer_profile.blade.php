@@ -45,7 +45,7 @@
                             </p>
                         </div>
 
-                        <a href="#" class="book-btn profile-book-btn">
+                        <a href="{{ route('front.booking_lawyer', $lawyer->id) }}" class="book-btn profile-book-btn">
                             Book Appointment
                         </a>
                     </div>
@@ -59,8 +59,7 @@
             <h2 class="section-title">About Lawyer</h2>
 
             <p class="about-text">
-                Law. Ahmad Ali is a highly experienced criminal law specialist with over 10 years of experience in legal
-                practice and client consultation.
+                {{ $lawyer->about_lawyers }}
             </p>
         </section>
 

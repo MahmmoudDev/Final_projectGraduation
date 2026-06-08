@@ -32,6 +32,14 @@
                 <input type="text" name="mobile" class="form-control" id="lawyer_mobile"
                     value="{{ old('mobile') }}">
             </div>
+
+            <div class="form-group mb-3">
+                <label>About Lawyer</label>
+                <textarea rows="3" id="about_lawyer" name="about_lawyers" class="form-control contact-input"
+                    placeholder="About me">
+
+                </textarea>
+            </div>
             <div class="form-group mb-3">
                 <label>Specialization</label>
                 <select name="specialization_id" class="form-control" id="lawyer_specialization_id">
@@ -76,7 +84,11 @@
 @section('js')
 <script>
     function Store() {
+
+
+
         let fromData = new FormData();
+        // alert('hi');
         fromData.append('name', document.getElementById('lawyer_name').value);
         fromData.append('email', document.getElementById('lawyer_email').value);
         fromData.append(
@@ -86,6 +98,7 @@
             ).value
         );
         fromData.append('mobile', document.getElementById('lawyer_mobile').value);
+        fromData.append('about_lawyers', document.getElementById('about_lawyer').value);
         fromData.append('specialization_id', document.getElementById('lawyer_specialization_id').value);
         fromData.append('experience', document.getElementById('lawyer_experience').value);
         fromData.append('image', document.getElementById('image-input').files[0]);

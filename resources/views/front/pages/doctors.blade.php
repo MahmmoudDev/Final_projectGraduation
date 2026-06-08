@@ -37,11 +37,13 @@
 
                                 <!-- Buttons -->
                                 <div class="d-flex gap-3">
-                                    <a href="{{ route('front.booking_lawyer', $item->id) }}" class="book-btn w-50 text-center">
+                                    <a href="{{ route('front.booking_lawyer', $item->id) }}"
+                                        class="book-btn w-50 text-center">
                                         Book
                                     </a>
 
-                                    <a href="{{ route('front.doctor_profile', $item->id) }}" class="profile-btn w-50 text-center">
+                                    <a href="{{ route('front.doctor_profile', $item->id) }}"
+                                        class="profile-btn w-50 text-center">
                                         View Profile
                                     </a>
                                 </div>
@@ -49,6 +51,10 @@
                         </div>
                     </div>
                 @endforeach
+            </div>
+
+            <div class="d-flex justify-content-center mt-4">
+                {{ $doctors->links('pagination::bootstrap-5') }}
             </div>
         </section>
 

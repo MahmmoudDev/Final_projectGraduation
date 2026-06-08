@@ -13,28 +13,37 @@
                 Book appointments with doctors and lawyers through one smart platform.
             </p>
             <div class="hero-search-box mt-5">
-                <form class="row g-3 justify-content-center">
-                    <!-- Search -->
+                <form action="{{ route('front.search') }}" method="GET" class="row g-3 justify-content-center">
+
                     <div class="col-md-4">
-                        <input type="text" class="form-control hero-input" placeholder="Search doctor or lawyer" />
+                        <input type="text" name="search" class="form-control hero-input"
+                            placeholder="Search doctor or lawyer">
                     </div>
 
-                    <!-- Specialization -->
                     <div class="col-md-3">
-                        <select class="form-select hero-input">
-                            <option selected>Select Specialization</option>
+                        <select name="type" class="form-select hero-input">
 
-                            <option>Cardiology</option>
-                            <option>Dentistry</option>
-                            <option>Corporate Law</option>
-                            <option>Criminal Law</option>
+                            <option value="">
+                                Select Professionals
+                            </option>
+
+                            <option value="doctor">
+                                Doctor
+                            </option>
+
+                            <option value="lawyer">
+                                Lawyer
+                            </option>
+
                         </select>
                     </div>
 
-                    <!-- Button -->
                     <div class="col-md-2">
-                        <button class="hero-search-btn w-100">Search</button>
+                        <button type="submit" class="hero-search-btn w-100">
+                            Search
+                        </button>
                     </div>
+
                 </form>
             </div>
         </div>
@@ -179,5 +188,144 @@
                 <a href="{{ route('front.lawyers') }}" class="view-all-btn"> View All Lawyers </a>
             </div>
         </div>
+    </section>
+
+    <section class="container py-5">
+
+        <div class="text-center mb-5">
+            <h2 class="section-title">
+                Recommended Doctors
+            </h2>
+
+            <p class="section-subtitle">
+                Top doctors based on experience.
+            </p>
+        </div>
+
+        <div class="row g-4 justify-content-center">
+
+            @foreach ($recommendedDoctors as $item)
+                <div class="col-lg-4 col-md-6">
+
+                    <div class="professional-card">
+
+                        @if ($item->image)
+                            <img src="{{ asset('storage/doctors/' . $item->image) }}" alt="Doctor Image"
+                                class="professional-img">
+                        @else
+                            <span>No Image</span>
+                        @endif
+
+                        <div class="p-4">
+
+                            <h4 class="professional-name">
+                                {{ $item->name }}
+                            </h4>
+
+                            <p class="professional-speciality">
+                                {{ $item->specialization->name }}
+                            </p>
+
+                            <p class="text-success fw-bold">
+                                {{ $item->experience }}
+                                Years Experience
+                            </p>
+
+                            <div class="d-flex gap-3">
+
+                                <a href="{{ route('front.booking_doctor', $item->id) }}" class="book-btn w-50 text-center">
+
+                                    Book
+
+                                </a>
+
+                                <a href="{{ route('front.doctor_profile', $item->id) }}"
+                                    class="profile-btn w-50 text-center">
+
+                                    View Profile
+
+                                </a>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+            @endforeach
+
+        </div>
+
+    </section>
+
+    <section class="container py-5">
+
+        <div class="text-center mb-5">
+            <h2 class="section-title">
+                Recommended Lawyers
+            </h2>
+
+            <p class="section-subtitle">
+                Top lawyers based on experience.
+            </p>
+        </div>
+
+        <div class="row g-4 justify-content-center">
+
+            @foreach ($recommendedLawyers as $item)
+                <div class="col-lg-4 col-md-6">
+
+                    <div class="professional-card">
+
+                        @if ($item->image)
+                            <img src="{{ asset('storage/lawyers/' . $item->image) }}" alt="Lawyer Image"
+                                class="professional-img">
+                        @else
+                            <span>No Image</span>
+                        @endif
+
+                        <div class="p-4">
+
+                            <h4 class="professional-name">
+                                {{ $item->name }}
+                            </h4>
+
+                            <p class="professional-speciality">
+                                {{ $item->specialization->name }}
+                            </p>
+
+                            <p class="text-success fw-bold">
+                                {{ $item->experience }}
+                                Years Experience
+                            </p>
+
+                            <div class="d-flex gap-3">
+
+                                <a href="{{ route('front.booking_lawyer', $item->id) }}"
+                                    class="book-btn w-50 text-center">
+
+                                    Book
+
+                                </a>
+
+                                <a href="{{ route('front.lawyer_profile', $item->id) }}"
+                                    class="profile-btn w-50 text-center">
+
+                                    View Profile
+
+                                </a>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+            @endforeach
+
+        </div>
+
     </section>
 @endsection

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Appointment;
+use App\Models\consultations;
 use App\Models\doctor;
 use App\Models\specialization;
 use Illuminate\Http\Request;
@@ -18,7 +19,7 @@ class DoctorController extends Controller
     public function index()
     {
         //
-        $doctors = doctor::with('specialization')->get();
+        $doctors = doctor::with('specialization')->latest()->paginate(5);
         return response()->view('dashboard.doctor.index', ['doctors' => $doctors]);
     }
 
@@ -43,6 +44,7 @@ class DoctorController extends Controller
             'password' =>
             'required|min:6',
             'mobile' => 'required|string|unique:doctors,mobile',
+            'about_doctor' => 'required',
             'specialization_id' => 'required|numeric|exists:specializations,id',
             'experience' => 'required|string|min:1|max:100',
             'image' => 'nullable|image|mimes:jpg,png,jpeg',
@@ -73,6 +75,7 @@ class DoctorController extends Controller
             );
         $doctor->specialization_id =  $request->input('specialization_id');
         $doctor->experience = $request->input('experience');
+        $doctor->about_doctor = $request->input('about_doctor');
         $doctor->status = $request->input('status') === 'active';
         if ($request->hasFile('image')) {
             $imageFile = $request->file('image');
@@ -120,6 +123,7 @@ class DoctorController extends Controller
             'name' => 'required|string|min:3|max:50',
             'email' => 'required|email|unique:doctors,email,' . $doctor->id,
             'mobile' => 'required|string|unique:doctors,mobile,' . $doctor->id,
+            'about_doctor' => 'required' . $doctor->id,
             'specialization_id' => 'required|numeric|exists:specializations,id',
             'experience' => 'required|string|min:1|max:100',
             'image' => 'nullable|image|mimes:jpg,png,jpeg',
@@ -130,18 +134,7 @@ class DoctorController extends Controller
         $doctor->name = $request->input('name');
         $doctor->email =  $request->input('email');
         $doctor->mobile =  $request->input('mobile');
-        if (
-            $request->filled(
-                'password'
-            )
-        ) {
-
-            $doctor->password =
-                Hash::make(
-                    $request
-                        ->password
-                );
-        }
+        $doctor->about_doctor = $request->input('about_doctor');
         $doctor->specialization_id =  $request->input('specialization_id');
         $doctor->experience = $request->input('experience');
         $doctor->status = $request->input('status') === 'active';
@@ -227,7 +220,7 @@ class DoctorController extends Controller
             )
 
             ->latest()
-            ->get();
+            ->paginate(5);
 
         return view(
             'dashboard.doctor.dashboard',
@@ -235,5 +228,104 @@ class DoctorController extends Controller
                 'appointments'
             )
         );
+    }
+
+
+
+
+
+    public function approve_appointment($id)
+    {
+        $appointment = Appointment::findOrFail($id);
+        $appointment->status = 'approved';
+        $appointment->save();
+
+        $notification = auth()->user()->unreadNotifications
+            ->where('data.appointment_id', $id)
+            ->first();
+
+        consultations::firstOrCreate([
+            'appointment_id' => $appointment->id
+        ], [
+            'user_id' => $appointment->user_id,
+
+            'service_provider_id' => $appointment->service_provider_id,
+
+            'service_type' => $appointment->service_type,
+
+            'title' => 'Consultation #' . $appointment->id,
+
+            'question' => 'Consultation Started',
+        ]);
+
+
+        if ($notification) {
+            $notification->markAsRead();
+        }
+
+        return redirect()->back()->with('success', 'Appointment approved successfully!');
+    }
+
+    public function reject_appointment($id)
+    {
+        $appointment = Appointment::findOrFail($id);
+        $appointment->status = 'rejected';
+        $appointment->save();
+
+        $notification = auth()->user()->unreadNotifications
+            ->where('data.appointment_id', $id)
+            ->first();
+
+        if ($notification) {
+            $notification->markAsRead();
+        }
+
+        return redirect()->back()->with('success', 'Appointment rejected successfully!');
+    }
+
+    public function edit_myprofile()
+    {
+        $doctor = auth('doctor')->user();
+        $specializations = Specialization::where('type', 'doctor')->get();
+        return view('dashboard.doctor.my_profile', ['doctor' => $doctor, 'specializations' => $specializations]);
+    }
+
+    public function update_profile(Request $request)
+    {
+        $doctor = auth('doctor')->user();
+
+        $validate = validator($request->all(), [
+            'name' => 'required|string|min:3|max:50',
+            'email' => 'required|email|unique:doctors,email,' . $doctor->id,
+            'mobile' => 'required|string|unique:doctors,mobile,' . $doctor->id,
+            'specialization_id' => 'required|numeric|exists:specializations,id',
+            'experience' => 'required|string|min:1|max:100',
+            'image' => 'nullable|image|mimes:jpg,png,jpeg',
+        ]);
+
+
+        $doctor->name = $request->input('name');
+        $doctor->email =  $request->input('email');
+        $doctor->mobile =  $request->input('mobile');
+        $doctor->specialization_id =  $request->input('specialization_id');
+        $doctor->experience = $request->input('experience');
+
+        if ($request->hasFile('image')) {
+            $imageFile = $request->file('image');
+            $name = time() . '.' . $imageFile->extension();
+            $imageFile->storeAs('doctors',  $name, 'public');
+            $doctor->image = $name;
+        }
+        // dd($doctor);
+        $isUpdated = $doctor->save();
+        return response()->json([
+            'icon' => $isUpdated ? 'success' : 'error',
+            'title' => $isUpdated ? 'Updated!' : 'Failed!',
+            'text' => $isUpdated ? 'Doctor updated successfully.' : 'Failed to update doctor.',
+            'name' => $doctor->name,
+            'image' => $doctor->image
+                ? asset('storage/doctors/' . $doctor->image)
+                : null,
+        ]);
     }
 }

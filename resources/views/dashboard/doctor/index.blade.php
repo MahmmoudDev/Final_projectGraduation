@@ -71,7 +71,12 @@
                         @endforeach
                     </tbody>
 
+
                 </table>
+
+                <div class="d-flex justify-content-center mt-4">
+                    {{ $doctors->links('pagination::bootstrap-5') }}
+                </div>
 
             </div>
         </div>

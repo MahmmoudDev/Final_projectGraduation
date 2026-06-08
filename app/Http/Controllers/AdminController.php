@@ -14,7 +14,9 @@ class AdminController extends Controller
     {
 
 
-        $admin = Admin::withoutTrashed()->get();
+        // $admin = Admin::withoutTrashed()->get();
+        $admin = Admin::withoutTrashed()->latest()->paginate(5);
+
         // dd($admin);
         return response()->view('dashboard.admin.index', ['admins' => $admin]);
     }

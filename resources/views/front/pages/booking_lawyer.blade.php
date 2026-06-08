@@ -94,59 +94,87 @@
 
                                         </label>
 
-                                        <input type="text" class="form-control
-            booking-input"
+                                        <input type="text" class="form-control booking-input"
                                             value="{{ auth()->user()->mobile }}" readonly>
 
                                     </div>
 
-                                </div>
+                                    <div class="mb-3">
+
+                                        <label>
+                                            Select Date
+                                        </label>
+
+                                        <div class="mb-3">
 
 
 
+                                            <select name="appointment_day" class="form-control" required>
 
-                                <!-- Available Time -->
+                                                <option value="">
+                                                    Select Day
+                                                </option>
 
-                                <div class="mb-4">
+                                                @php
 
-                                    <label class="form-label">
+                                                    $days = [
+                                                        'Sunday',
+                                                        'Monday',
+                                                        'Tuesday',
+                                                        'Wednesday',
+                                                        'Thursday',
+                                                        'Friday',
+                                                        'Saturday',
+                                                    ];
 
-                                        Available Time
+                                                    $from = array_search(
+                                                        $lawyer->availabilities->first()->day_from,
+                                                        $days,
+                                                    );
 
-                                    </label>
+                                                    $to = array_search($lawyer->availabilities->first()->day_to, $days);
 
-                                    <select name="availability_id" class="form-control
-    booking-input" required>
+                                                @endphp
 
-                                        <option value="">
+                                                @for ($i = $from; $i <= $to; $i++)
+                                                    <option value="{{ $days[$i] }}">
 
-                                            Select Available Time
+                                                        {{ $days[$i] }}
 
-                                        </option>
+                                                    </option>
+                                                @endfor
 
-                                        @foreach ($lawyer->availabilities as $availability)
-                                            <option value="{{ $availability->id }}">
+                                            </select>
 
-                                                {{ $availability->day_from }}
+                                        </div>
 
-                                                →
+                                    </div>
 
-                                                {{ $availability->day_to }}
+                                    <div class="mb-3">
+                                        <label>Select Time</label>
 
-                                                |
+                                        <select name="appointment_time" class="form-control" required>
 
-                                                {{ \Carbon\Carbon::parse($availability->start_time)->format('h:i A') }}
-
-                                                -
-
-                                                {{ \Carbon\Carbon::parse($availability->end_time)->format('h:i A') }}
-
+                                            <option value="">
+                                                Select Time
                                             </option>
-                                        @endforeach
 
-                                    </select>
+                                            @foreach ($times as $time)
+                                                <option value="{{ $time['value'] }}">
+                                                    {{ $time['label'] }}
+                                                </option>
+                                            @endforeach
+
+                                        </select>
+                                    </div>
+
 
                                 </div>
+
+
+
+
+
                                 <button type="submit" class="confirm-btn">
 
                                     Confirm Appointment

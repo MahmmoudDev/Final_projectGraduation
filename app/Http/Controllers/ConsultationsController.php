@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\consultations;
 use Illuminate\Http\Request;
 
 class ConsultationsController extends Controller
@@ -11,8 +12,49 @@ class ConsultationsController extends Controller
      */
     public function index()
     {
-        //
-        return view('dashboard.Consultation.index');
+        if (auth('doctor')->check()) {
+
+            $consultations = consultations::with([
+                'user',
+                'doctor',
+                'lawyer'
+            ])
+                ->where(
+                    'service_provider_id',
+                    auth('doctor')->id()
+                )
+                ->where(
+                    'service_type',
+                    'doctor'
+                )
+                ->latest()
+                ->get();
+        } elseif (auth('lawyer')->check()) {
+
+            $consultations = consultations::with([
+                'user',
+                'doctor',
+                'lawyer'
+            ])
+                ->where(
+                    'service_provider_id',
+                    auth('lawyer')->id()
+                )
+                ->where(
+                    'service_type',
+                    'lawyer'
+                )
+                ->latest()
+                ->get();
+        } else {
+
+            abort(403);
+        }
+
+        return view(
+            'dashboard.Consultation.index',
+            compact('consultations')
+        );
     }
 
     /**
@@ -34,9 +76,19 @@ class ConsultationsController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show($id)
     {
-        return response()->view('dashboard.consultation.show');
+        $consultation = consultations::with([
+            'user',
+            'doctor',
+            'lawyer',
+            'messages'
+        ])->findOrFail($id);
+
+        return view(
+            'dashboard.consultation.show',
+            compact('consultation')
+        );
     }
 
     /**

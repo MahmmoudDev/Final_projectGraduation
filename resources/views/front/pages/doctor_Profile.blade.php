@@ -64,9 +64,7 @@
             <h2 class="section-title">About Doctor</h2>
 
             <p class="about-text">
-                Dr. Ahmad Ali is a highly experienced cardiologist specializing in heart
-                disease diagnosis and treatment. He has over 10 years of experience in
-                medical care and patient consultation.
+                {{ $doctor->about_doctor }}
             </p>
         </section>
 

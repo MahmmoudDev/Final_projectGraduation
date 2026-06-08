@@ -3,8 +3,6 @@
 @section('Main-content', 'Main-Dashborad')
 @section('breadcrumb-main', 'Home')
 @section('breadcrumb-sub', 'Dashboard')
-
-
 @section('content')
     <div class="row">
         <div class="col-lg-3 col-6">
@@ -120,7 +118,6 @@
 
 
 
-
         <div class="card">
             <div class="card-header d-flex justify-content-between align-items-center">
                 <h3 class="card-title">
@@ -129,91 +126,89 @@
 
             </div>
             <div class="card-body">
-                <div class="table-responsive">
+                <table class="table table-bordered table-hover text-center align-middle" >
 
-                    <table class="table table-bordered table-hover text-center align-middle">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>#</th>
+                            <th>User</th>
+                            <th>Provider</th>
+                            <th>Type</th>
+                            <th>Appointment Day</th>
+                            <th>Appointment Time</th>
+                            <th>Status</th>
+                            <th>Created At</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
 
-                        <thead class="table-dark">
+                    <tbody>
+                    <tbody>
+
+                        @foreach ($appointment as $item)
                             <tr>
-                                <th>#</th>
-                                <th>User</th>
-                                <th>Provider</th>
-                                <th>Type</th>
-                                <th>Appointment Day</th>
-                                <th>Appointment Time</th>
-                                <th>Status</th>
-                                <th>Created At</th>
-                                <th>Actions</th>
+
+                                <td>
+                                    {{ $item->id }}
+                                </td>
+
+                                <td>
+                                    {{ $item->user?->name }}
+                                </td>
+
+                                <td>
+                                    {{ $item->provider_name }}
+                                </td>
+
+                                <td>
+                                    {{ $item->service_type }}
+                                </td>
+
+                                <td>
+                                    {{ $item->appointment_date }}
+                                </td>
+
+                                <td>
+                                    {{ $item->appointment_time }}
+                                </td>
+
+                                <td>
+                                    @if ($item->status == 'cancelled')
+                                        <span class="badge bg-danger">
+                                            Cancelled
+                                        </span>
+                                    @else
+                                        <span class="badge bg-warning">
+
+                                            {{ $item->status }}
+
+                                        </span>
+                                    @endif
+
+                                </td>
+
+                                <td>
+                                    {{ $item->created_at }}
+                                </td>
+
+                                <td>
+
+                                    <button type="button" class="btn btn-sm btn-danger">
+
+                                        <i class="fa-solid fa-trash"></i>
+
+                                    </button>
+
+                                </td>
+
                             </tr>
-                        </thead>
+                        @endforeach
 
-                        <tbody>
-                        <tbody>
-
-                            @foreach ($appointment as $item)
-                                <tr>
-
-                                    <td>
-                                        {{ $item->id }}
-                                    </td>
-
-                                    <td>
-                                        {{ $item->user?->name }}
-                                    </td>
-
-                                    <td>
-                                        {{ $item->provider_name }}
-                                    </td>
-
-                                    <td>
-                                        {{ $item->service_type }}
-                                    </td>
-
-                                    <td>
-                                        {{ $item->appointment_date }}
-                                    </td>
-
-                                    <td>
-                                        {{ $item->appointment_time }}
-                                    </td>
-
-                                    <td>
-                                        @if ($item->status == 'cancelled')
-                                            <span class="badge bg-danger">
-                                                Cancelled
-                                            </span>
-                                        @else
-                                            <span class="badge bg-warning">
-
-                                                {{ $item->status }}
-
-                                            </span>
-                                        @endif
-
-                                    </td>
-
-                                    <td>
-                                        {{ $item->created_at }}
-                                    </td>
-
-                                    <td>
-
-                                        <button type="button" class="btn btn-sm btn-danger">
-
-                                            <i class="fa-solid fa-trash"></i>
-
-                                        </button>
-
-                                    </td>
-
-                                </tr>
-                            @endforeach
-
-                        </tbody>
+                    </tbody>
 
 
 
-                        {{-- @foreach ($doctors as $item)
+                    {{-- @foreach ($doctors as $item)
                                 <tr>
                                     <td>{{ $item->id }}</td>
                                     <td>{{ $item->name }}</td>
@@ -243,13 +238,19 @@
 
                                 </tr>
                             @endforeach --}}
-                        </tbody>
+                    </tbody>
 
-                    </table>
+                </table>
+
+                <div class="d-flex justify-content-center mt-4">
+                    {{ $appointment->links('pagination::bootstrap-5') }}
                 </div>
-            </div>
 
+            </div>
         </div>
+
+
+
         <div class="card mt-4">
             <div class="card-header d-flex justify-content-between align-items-center">
                 <h3 class="card-title">
@@ -349,6 +350,10 @@
                             @endforeach
                         </tbody>
                     </table>
+
+                    <div class="d-flex justify-content-center mt-4">
+                        {{ $appointment->links('pagination::bootstrap-5') }}
+                    </div>
                 </div>
             </div>
         </div>

@@ -15621,4 +15621,20 @@ fieldset legend {
   }
 }
 
+/* تنسيق أزرار التنقل لتطابق ثيم اللوحة البرتقالي */
+.pagination .page-item.active .page-link {
+    background-color: #F7941D !important;
+    border-color: #F7941D !important;
+    color: white !important;
+}
+
+.pagination .page-link {
+    color: #F7941D !important;
+}
+
+.pagination .page-link:hover {
+    background-color: #fcecdb !important;
+    color: #d47a13 !important;
+}
+
 /*# sourceMappingURL=adminlte.css.map */

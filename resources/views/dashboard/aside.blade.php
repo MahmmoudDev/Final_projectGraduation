@@ -22,9 +22,7 @@
             <ul class="nav sidebar-menu flex-column" data-lte-toggle="treeview" role="navigation"
                 aria-label="Main navigation" data-accordion="false" id="navigation">
 
-                {{-- ===================== --}}
-                {{-- ADMIN SIDEBAR --}}
-                {{-- ===================== --}}
+
 
                 @if (Auth::guard('admin')->check())
                     <li class="nav-item">
@@ -45,7 +43,6 @@
                         Content
                     </li>
 
-                    {{-- Admins --}}
                     <li class="nav-item">
 
                         <a href="#" class="nav-link">
@@ -92,7 +89,6 @@
 
                     </li>
 
-                    {{-- Users --}}
                     <li class="nav-item">
 
                         <a href="{{ route('users.index') }}" class="nav-link">
@@ -107,7 +103,6 @@
 
                     </li>
 
-                    {{-- Doctors --}}
                     <li class="nav-item">
 
                         <a href="#" class="nav-link">
@@ -154,7 +149,6 @@
 
                     </li>
 
-                    {{-- Lawyers --}}
                     <li class="nav-item">
 
                         <a href="#" class="nav-link">
@@ -201,7 +195,6 @@
 
                     </li>
 
-                    {{-- Appointments --}}
                     <li class="nav-item">
 
                         <a href="{{ route('appointments.index') }}" class="nav-link">
@@ -216,7 +209,6 @@
 
                     </li>
 
-                    {{-- Specialty --}}
                     <li class="nav-item">
 
                         <a href="{{ route('specializations.index') }}" class="nav-link">
@@ -231,7 +223,6 @@
 
                     </li>
 
-                    {{-- Contact --}}
                     <li class="nav-item">
 
                         <a href="{{ route('contacts.index') }}" class="nav-link">
@@ -246,7 +237,6 @@
 
                     </li>
 
-                    {{-- Availability --}}
                     <li class="nav-item">
 
                         <a href="{{ route('availabilities.index') }}" class="nav-link">
@@ -260,38 +250,18 @@
                         </a>
 
                     </li>
-
-                    {{-- Consultation --}}
-                    <li class="nav-item">
-
-                        <a href="{{ route('consultations.index') }}" class="nav-link">
-
-                            <i class="nav-icon bi bi-camera-video"></i>
-
-                            <p>
-                                Consultations
-                            </p>
-
-                        </a>
-
-                    </li>
                 @endif
 
 
-                {{-- ===================== --}}
-                {{-- DOCTOR / LAWYER --}}
-                {{-- ===================== --}}
 
-                @if (Auth::guard('doctor')->check() || Auth::guard('lawyer')->check())
+                @if (Auth::guard('doctor')->check())
                     <li class="nav-item">
 
-                        <a href="#" class="nav-link active">
+                        <a href="{{ route('doctor.dashboard') }}" class="nav-link">
 
                             <i class="nav-icon bi bi-speedometer"></i>
 
-                            <p>
-                                Dashboard
-                            </p>
+                            <p>Dashboard</p>
 
                         </a>
 
@@ -299,27 +269,23 @@
 
                     <li class="nav-item">
 
-                        <a href="#" class="nav-link">
-
-                            <i class="nav-icon bi bi-calendar-check"></i>
-
-                            <p>
-                                My Appointments
-                            </p>
-
-                        </a>
-
-                    </li>
-
-                    <li class="nav-item">
-
-                        <a href="#" class="nav-link">
+                        <a href="{{ route('doctor.myprofile') }}" class="nav-link">
 
                             <i class="nav-icon bi bi-person-circle"></i>
 
-                            <p>
-                                My Profile
-                            </p>
+                            <p>My Profile</p>
+
+                        </a>
+
+                    </li>
+
+                    <li class="nav-item">
+
+                        <a href="{{ route('doctor.consultations.index') }}" class="nav-link">
+
+                            <i class="nav-icon bi bi-camera-video"></i>
+
+                            <p>Consultations</p>
 
                         </a>
 
@@ -327,9 +293,45 @@
                 @endif
 
 
-                {{-- ===================== --}}
-                {{-- LOGOUT --}}
-                {{-- ===================== --}}
+                @if (Auth::guard('lawyer')->check())
+                    <li class="nav-item">
+
+                        <a href="{{ route('lawyer.dashboard') }}" class="nav-link">
+
+                            <i class="nav-icon bi bi-speedometer"></i>
+
+                            <p>Dashboard</p>
+
+                        </a>
+
+                    </li>
+
+                    <li class="nav-item">
+
+                        <a href="{{ route('doctor.myprofile') }}" class="nav-link">
+
+                            <i class="nav-icon bi bi-person-circle"></i>
+
+                            <p>My Profile</p>
+
+                        </a>
+
+                    </li>
+
+                    <li class="nav-item">
+
+                        <a href="{{ route('lawyer.consultations.index') }}" class="nav-link">
+
+                            <i class="nav-icon bi bi-camera-video"></i>
+
+                            <p>Consultations</p>
+
+                        </a>
+
+                    </li>
+                @endif
+
+
 
                 <li class="nav-header">
                     Auth

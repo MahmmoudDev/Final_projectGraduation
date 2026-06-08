@@ -19,7 +19,8 @@ class consultation_messages extends Model
     public function consultation()
     {
         return $this->belongsTo(
-            consultations::class
+            consultations::class,
+            'consultation_id'
         );
     }
 }

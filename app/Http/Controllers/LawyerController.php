@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Appointment;
+use App\Models\consultations;
 use App\Models\lawyer;
 use App\Models\specialization;
 use Illuminate\Http\Request;
@@ -17,7 +18,9 @@ class LawyerController extends Controller
     public function index()
     {
         //
-        $lawyers = lawyer::with('specialization')->get();
+        // $lawyers = lawyer::with('specialization')->get();
+        $lawyers = lawyer::with('specialization')->latest()->paginate(5);
+
         return response()->view('dashboard.lawyer.index', ['lawyers' => $lawyers]);
     }
 
@@ -36,14 +39,13 @@ class LawyerController extends Controller
      */
     public function store(Request $request)
     {
-        //
-
         $validate = validator($request->all(), [
             'name' => 'required|string|min:3|max:50',
-            'email' => 'required|email|unique:lawyers,email',
+            'email' => 'required|email|unique:doctors,email',
             'password' =>
-            'required|string|min:8',
-            'mobile' => 'required|string|unique:lawyers,mobile',
+            'required|min:6',
+            'mobile' => 'required|string|unique:doctors,mobile',
+            'about_lawyers' => 'required',
             'specialization_id' => 'required|numeric|exists:specializations,id',
             'experience' => 'required|string|min:1|max:100',
             'image' => 'nullable|image|mimes:jpg,png,jpeg',
@@ -55,19 +57,26 @@ class LawyerController extends Controller
                 'icon' => 'error',
                 'title' => 'Validation Error',
                 'text' =>
-                $validate->errors()->first()
+                $validate->errors()->first(),
+                'password' =>
+                bcrypt(
+                    $request
+                        ->password
+                ),
             ]);
         }
         $lawyer = new lawyer();
         $lawyer->name = $request->input('name');
         $lawyer->email =  $request->input('email');
+        $lawyer->mobile =  $request->input('mobile');
         $lawyer->password =
             Hash::make(
-                $request->password
+                $request
+                    ->password
             );
-        $lawyer->mobile =  $request->input('mobile');
         $lawyer->specialization_id =  $request->input('specialization_id');
         $lawyer->experience = $request->input('experience');
+        $lawyer->about_lawyers = $request->input('about_lawyers');
         $lawyer->status = $request->input('status') === 'active';
         if ($request->hasFile('image')) {
             $imageFile = $request->file('image');
@@ -117,6 +126,7 @@ class LawyerController extends Controller
             'email' => 'required|email|unique:lawyers,email,' . $lawyer->id,
             'password' =>
             'nullable|string|min:8',
+            'about_lawyers' => 'required' . $lawyer->id,
             'mobile' => 'required|string|unique:lawyers,mobile,' . $lawyer->id,
             'specialization_id' => 'required|numeric|exists:specializations,id',
             'experience' => 'required|string|min:1|max:100',
@@ -128,17 +138,8 @@ class LawyerController extends Controller
         $lawyer->name = $request->input('name');
         $lawyer->email =  $request->input('email');
         $lawyer->mobile =  $request->input('mobile');
-        if (
-            $request->filled(
-                'password'
-            )
-        ) {
+        $lawyer->about_lawyers =  $request->input('about_lawyers');
 
-            $lawyer->password =
-                Hash::make(
-                    $request->password
-                );
-        }
         $lawyer->specialization_id =  $request->input('specialization_id');
         $lawyer->experience = $request->input('experience');
         $lawyer->status = $request->input('status') === 'active';
@@ -235,5 +236,100 @@ class LawyerController extends Controller
                 'appointments'
             )
         );
+    }
+
+    public function approve_appointment($id)
+    {
+        $appointment = Appointment::findOrFail($id);
+        $appointment->status = 'approved';
+        $appointment->save();
+
+        $notification = auth()->user()->unreadNotifications
+            ->where('data.appointment_id', $id)
+            ->first();
+
+        consultations::firstOrCreate([
+            'appointment_id' => $appointment->id
+        ], [
+            'user_id' => $appointment->user_id,
+
+            'service_provider_id' => $appointment->service_provider_id,
+
+            'service_type' => $appointment->service_type,
+
+            'title' => 'Consultation #' . $appointment->id,
+
+            'question' => 'Consultation Started',
+        ]);
+
+
+        if ($notification) {
+            $notification->markAsRead();
+        }
+
+        return redirect()->back()->with('success', 'Appointment approved successfully!');
+    }
+
+    public function reject_appointment($id)
+    {
+        $appointment = Appointment::findOrFail($id);
+        $appointment->status = 'rejected';
+        $appointment->save();
+
+        $notification = auth()->user()->unreadNotifications
+            ->where('data.appointment_id', $id)
+            ->first();
+
+        if ($notification) {
+            $notification->markAsRead();
+        }
+
+        return redirect()->back()->with('success', 'Appointment rejected successfully!');
+    }
+
+    public function edit_myprofile()
+    {
+        $lawyer = auth('lawyer')->user();
+        $specializations = Specialization::where('type', 'lawyer')->get();
+        return view('dashboard.lawyer.my_profile', ['lawyer' => $lawyer, 'specializations' => $specializations]);
+    }
+
+    public function update_profile(Request $request)
+    {
+        $lawyer = auth('lawyer')->user();
+
+        $validate = validator($request->all(), [
+            'name' => 'required|string|min:3|max:50',
+            'email' => 'required|email|unique:doctors,email,' . $lawyer->id,
+            'mobile' => 'required|string|unique:lawyers,mobile,' . $lawyer->id,
+            'specialization_id' => 'required|numeric|exists:specializations,id',
+            'experience' => 'required|string|min:1|max:100',
+            'image' => 'nullable|image|mimes:jpg,png,jpeg',
+        ]);
+
+
+        $lawyer->name = $request->input('name');
+        $lawyer->email =  $request->input('email');
+        $lawyer->mobile =  $request->input('mobile');
+        $lawyer->specialization_id =  $request->input('specialization_id');
+        $lawyer->experience = $request->input('experience');
+
+        if ($request->hasFile('image')) {
+            $imageFile = $request->file('image');
+            $name = time() . '.' . $imageFile->extension();
+            $imageFile->storeAs('lawyers',  $name, 'public');
+            $lawyer->image = $name;
+        }
+        // dd($lawyer);
+        $isUpdated = $lawyer->save();
+        return response()->json([
+            'icon' => $isUpdated ? 'success' : 'error',
+            'title' => $isUpdated ? 'Updated!' : 'Failed!',
+            'text' => $isUpdated ? 'lawyer updated successfully.' : 'Failed to update lawyer.',
+            'name' => $lawyer->name,
+            'image' => $lawyer->image
+                ? asset('storage/lawyers/' . $lawyer->image)
+                : null,
+        ]);
     }
 }
