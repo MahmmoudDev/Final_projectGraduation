@@ -9,83 +9,54 @@ class AuthController extends Controller
 {
     public function showLogin()
     {
-        return view(
-            'dashboard.auth.login'
-        );
+        return view('dashboard.auth.login');
     }
 
-    public function dashboard_login(
-        Request $request
-    ) {
-
+    public function dashboard_login(Request $request)
+    {
         $credentials = [
 
-            'email' =>
-            $request->email,
-
-            'password' =>
-            $request->password,
+            'email'    => $request->email,
+            'password' => $request->password,
 
         ];
 
         // Admin
-        if (
-            Auth::guard(
-                'admin'
-            )->attempt(
-                $credentials
-            )
-        ) {
+        if (Auth::guard('admin')->attempt($credentials)) {
+
+            $request->session()->regenerate();
 
             return redirect()
-                ->route(
-                    'admin.dashboard'
+                ->route('admin.dashboard')
+                ->with(
+                    'success',
+                    'Welcome Admin'
                 );
         }
 
         // Doctor
-        $doctor =
-            \App\Models\doctor::where(
-                'email',
-                $request->email
-            )->first();
+        if (Auth::guard('doctor')->attempt($credentials)) {
 
-        if (
-            $doctor &&
-            $doctor->password &&
-            Auth::guard(
-                'doctor'
-            )->attempt(
-                $credentials
-            )
-        ) {
+            $request->session()->regenerate();
 
             return redirect()
-                ->route(
-                    'doctor.dashboard'
+                ->route('doctor.dashboard')
+                ->with(
+                    'success',
+                    'Login successful'
                 );
         }
 
         // Lawyer
-        $lawyer =
-            \App\Models\lawyer::where(
-                'email',
-                $request->email
-            )->first();
+        if (Auth::guard('lawyer')->attempt($credentials)) {
 
-        if (
-            $lawyer &&
-            $lawyer->password &&
-            Auth::guard(
-                'lawyer'
-            )->attempt(
-                $credentials
-            )
-        ) {
+            $request->session()->regenerate();
 
             return redirect()
-                ->route(
-                    'lawyer.dashboard'
+                ->route('lawyer.dashboard')
+                ->with(
+                    'success',
+                    'Login successful'
                 );
         }
 
@@ -95,33 +66,16 @@ class AuthController extends Controller
         );
     }
 
-    public function logout()
+    public function logout(Request $request)
     {
-        Auth::guard(
-            'doctor'
-        )->logout();
+        Auth::guard('admin')->logout();
+        Auth::guard('doctor')->logout();
+        Auth::guard('lawyer')->logout();
+        Auth::guard('web')->logout();
 
-        Auth::guard(
-            'lawyer'
-        )->logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
 
-        Auth::guard(
-            'admin'
-        )->logout();
-
-        Auth::logout();
-
-        request()
-            ->session()
-            ->invalidate();
-
-        request()
-            ->session()
-            ->regenerateToken();
-
-        return redirect()
-            ->route(
-                'dashboard.login'
-            );
+        return redirect()->route('dashboard.login');
     }
 }

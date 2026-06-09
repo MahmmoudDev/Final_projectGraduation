@@ -133,7 +133,7 @@
 
                 formData.append('_method', 'PUT');
 
-                axios.post('{{ route('update.myprofile') }}', formData)
+                axios.post('{{ route('lawyer.update.myprofile') }}', formData)
                     .then(function(response) {
 
                         let navbarImg =

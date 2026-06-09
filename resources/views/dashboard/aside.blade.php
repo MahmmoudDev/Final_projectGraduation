@@ -308,7 +308,7 @@
 
                     <li class="nav-item">
 
-                        <a href="{{ route('doctor.myprofile') }}" class="nav-link">
+                        <a href="{{ route('lawyer.myprofile') }}" class="nav-link">
 
                             <i class="nav-icon bi bi-person-circle"></i>
 

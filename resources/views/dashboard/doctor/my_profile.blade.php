@@ -13,7 +13,8 @@
                 <h3 class="card-title text-white mb-0">Update Personal Profile Information</h3>
             </div>
 
-            <form id="form_id" onsubmit="update(event)" enctype="multipart/form-data"> @csrf
+            <form id="form_id" method="POST" onsubmit="update(event)" enctype="multipart/form-data">
+                @csrf
                 @method('PUT')
 
                 <div class="card-body">
@@ -132,7 +133,7 @@
 
                 formData.append('_method', 'PUT');
 
-                axios.post('{{ route('update.myprofile') }}', formData)
+                axios.post('{{ route('doctor.update.myprofile') }}', formData)
                     .then(function(response) {
 
                         let navbarImg =

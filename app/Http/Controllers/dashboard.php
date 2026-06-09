@@ -22,6 +22,7 @@ class dashboard extends Controller
         $lawyerCount = lawyer::count();
         $appointmetCount = Appointment::count();
         $specializationCount = specialization::count();
+        $UserCount = User::count();
 
         $appointments = Appointment::with('user')->latest()->paginate(5);
         foreach ($appointments as $appointment) {
@@ -52,6 +53,7 @@ class dashboard extends Controller
             'lawyerCount' => $lawyerCount,
             'specializationCount' => $specializationCount,
             'appointmetCount' => $appointmetCount,
+            'UserCount' => $UserCount,
             'appointment' => $appointments, // 👈 يمرر الآن ككائن Pagination مجهز
             'contact' => $contact
         ]);

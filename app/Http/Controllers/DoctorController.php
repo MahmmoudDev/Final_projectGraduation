@@ -294,7 +294,7 @@ class DoctorController extends Controller
     {
         $doctor = auth('doctor')->user();
 
-        $validate = validator($request->all(), [
+        $request->validate([
             'name' => 'required|string|min:3|max:50',
             'email' => 'required|email|unique:doctors,email,' . $doctor->id,
             'mobile' => 'required|string|unique:doctors,mobile,' . $doctor->id,
@@ -317,6 +317,8 @@ class DoctorController extends Controller
             $doctor->image = $name;
         }
         // dd($doctor);
+
+        // dd($request->all());
         $isUpdated = $doctor->save();
         return response()->json([
             'icon' => $isUpdated ? 'success' : 'error',

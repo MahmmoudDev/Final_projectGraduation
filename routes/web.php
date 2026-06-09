@@ -182,7 +182,10 @@ Route::prefix('doctor')
         )->names('doctor.consultations');
 
         Route::get('/edit-myprofile', [DoctorController::class, 'edit_myprofile'])->name('doctor.myprofile');
-        Route::put('/update-myprofile', [DoctorController::class, 'update_profile'])->name('update.myprofile');
+        Route::put(
+            '/update-myprofile',
+            [DoctorController::class, 'update_profile']
+        )->name('doctor.update.myprofile');
 
         Route::get(
             '/dashboard/search',
@@ -224,8 +227,11 @@ Route::prefix('lawyer')
             ConsultationsController::class
         )->names('lawyer.consultations');
 
-        Route::get('/edit-myprofile', [LawyerController::class, 'edit_myprofile'])->name('doctor.myprofile');
-        Route::put('/update-myprofile', [LawyerController::class, 'update_profile'])->name('update.myprofile');
+        Route::get('/edit-myprofile', [LawyerController::class, 'edit_myprofile'])->name('lawyer.myprofile');
+        Route::put(
+            '/update-myprofile',
+            [LawyerController::class, 'update_profile']
+        )->name('lawyer.update.myprofile');
 
         Route::get(
             '/dashboard/search',
