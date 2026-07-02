@@ -80,7 +80,7 @@
                             <div class="mb-3">
                                 <label class="form-label"> Full Name </label>
 
-                                <input type="text" name="name" value="{{ auth()->user()->name }}"
+                                <input type="text" name="name" value="{{ auth()->check() ? auth()->user()->name : '' }}"
                                     class="form-control
                                     contact-input"
                                     placeholder="Enter your name" />
@@ -89,7 +89,7 @@
                             <div class="mb-3">
                                 <label class="form-label"> Email Address </label>
 
-                                <input type="email" value="{{ auth()->user()->email }}" name="email"
+                                <input type="email" value="{{ auth()->check() ? auth()->user()->email : '' }}" name="email"
                                     class="form-control contact-input" placeholder="Enter your email" />
                             </div>
 

@@ -60,8 +60,24 @@
 
                                     </div>
 
+
+
                                 </div>
 
+                                <div>
+
+                                    <p class="text mt-4">
+
+                                        forgot your password?
+                                        <a href="{{ route('password.request') }}" class="register-link">
+
+                                            Reset Password
+
+                                        </a>
+
+                                    </p>
+
+                                </div>
 
                                 <button type="submit" class="auth-btn">
 

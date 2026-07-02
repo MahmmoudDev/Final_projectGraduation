@@ -98,25 +98,21 @@
                                             value="{{ auth()->user()->mobile }}" readonly>
 
                                     </div>
-
                                     <div class="mb-3">
 
-                                        <label>
-                                            Select Date
-                                        </label>
+                                        <label>Select Date</label>
 
                                         <div class="mb-3">
 
 
 
-                                            <select name="appointment_day" class="form-control" required>
+                                            @php
+                                                $availability = $lawyer->availabilities->first();
+                                            @endphp
 
-                                                <option value="">
-                                                    Select Day
-                                                </option>
+                                            @if ($availability)
 
                                                 @php
-
                                                     $days = [
                                                         'Sunday',
                                                         'Monday',
@@ -127,46 +123,77 @@
                                                         'Saturday',
                                                     ];
 
-                                                    $from = array_search(
-                                                        $lawyer->availabilities->first()->day_from,
-                                                        $days,
-                                                    );
-
-                                                    $to = array_search($lawyer->availabilities->first()->day_to, $days);
-
+                                                    $from = array_search($availability->day_from, $days);
+                                                    $to = array_search($availability->day_to, $days);
                                                 @endphp
 
-                                                @for ($i = $from; $i <= $to; $i++)
-                                                    <option value="{{ $days[$i] }}">
+                                                <select name="appointment_day" class="form-control" required>
 
-                                                        {{ $days[$i] }}
-
+                                                    <option value="">
+                                                        Select Day
                                                     </option>
-                                                @endfor
 
-                                            </select>
+                                                    @if ($from <= $to)
+
+                                                        @for ($i = $from; $i <= $to; $i++)
+                                                            <option value="{{ $days[$i] }}">
+                                                                {{ $days[$i] }}
+                                                            </option>
+                                                        @endfor
+                                                    @else
+                                                        @for ($i = $from; $i < count($days); $i++)
+                                                            <option value="{{ $days[$i] }}">
+                                                                {{ $days[$i] }}
+                                                            </option>
+                                                        @endfor
+
+                                                        @for ($i = 0; $i <= $to; $i++)
+                                                            <option value="{{ $days[$i] }}">
+                                                                {{ $days[$i] }}
+                                                            </option>
+                                                        @endfor
+
+                                                    @endif
+
+                                                </select>
+                                            @else
+                                                <div class="alert alert-warning">
+                                                    No appointments are currently available for this lawyer.
+                                                </div>
+
+                                            @endif
 
                                         </div>
 
                                     </div>
 
-                                    <div class="mb-3">
-                                        <label>Select Time</label>
+                                    @if ($availability)
 
-                                        <select name="appointment_time" class="form-control" required>
+                                        <div class="mb-3">
 
-                                            <option value="">
-                                                Select Time
-                                            </option>
+                                            <label>Select Time</label>
 
-                                            @foreach ($times as $time)
-                                                <option value="{{ $time['value'] }}">
-                                                    {{ $time['label'] }}
+                                            <select name="appointment_time" class="form-control" required>
+
+                                                <option value="">
+                                                    Select Time
                                                 </option>
-                                            @endforeach
 
-                                        </select>
-                                    </div>
+                                                @foreach ($times as $time)
+                                                    <option value="{{ $time['value'] }}">
+                                                        {{ $time['label'] }}
+                                                    </option>
+                                                @endforeach
+
+                                            </select>
+
+                                        </div>
+
+                                        <button type="submit" class="confirm-btn">
+                                            Confirm Appointment
+                                        </button>
+
+                                    @endif
 
 
                                 </div>
@@ -175,11 +202,7 @@
 
 
 
-                                <button type="submit" class="confirm-btn">
 
-                                    Confirm Appointment
-
-                                </button>
 
                             </form>
                         </div>

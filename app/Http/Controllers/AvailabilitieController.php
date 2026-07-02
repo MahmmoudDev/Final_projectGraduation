@@ -36,17 +36,18 @@ class AvailabilitieController extends Controller
     public function store(Request $request)
     {
         //
-        $validate = validator([
+        $validate = validator(
             $request->all(),
-            'service_provider_id' => 'required|integer',
-            'day_from' => 'required|string',
-            'day_to' => 'required|string',
-            'start_time' => 'required',
-            'end_time' => 'required',
-
-            'is_available' => 'required|boolean',
-            'Status' => 'required|in:active,inactive'
-        ]);
+            [
+                'service_provider_id' => 'required|integer',
+                'service_type' => 'required|in:doctor,lawyer',
+                'day_from' => 'required|string',
+                'day_to' => 'required|string',
+                'start_time' => 'required',
+                'end_time' => 'required',
+                'is_available' => 'required|boolean',
+            ]
+        );
 
         if ($validate->fails()) {
             return response()->json(
@@ -127,16 +128,18 @@ class AvailabilitieController extends Controller
     public function update(Request $request, availabilitie $availability)
     {
 
-        $validate = validator([
+        $validate = validator(
             $request->all(),
-            'service_provider_id' => 'required|integer',
-            'service_type' => 'required',
-            'day_from' => 'required|string',
-            'day_to' => 'required|string',
-            'start_time' => 'required',
-            'end_time' => 'required',
-            'is_available' => 'required|boolean',
-        ]);
+            [
+                'service_provider_id' => 'required|integer',
+                'service_type' => 'required|in:doctor,lawyer',
+                'day_from' => 'required|string',
+                'day_to' => 'required|string',
+                'start_time' => 'required',
+                'end_time' => 'required',
+                'is_available' => 'required|boolean',
+            ]
+        );
 
         if ($validate->fails()) {
             return response()->json(

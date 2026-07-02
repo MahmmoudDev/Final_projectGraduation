@@ -6,6 +6,7 @@ use App\Models\Appointment;
 use App\Models\consultations;
 use App\Models\lawyer;
 use App\Models\specialization;
+use App\Notifications\AppointmentApprovedNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -244,6 +245,10 @@ class LawyerController extends Controller
         $appointment->status = 'approved';
         $appointment->save();
 
+        $appointment->user->notify(
+            new AppointmentApprovedNotification($appointment)
+        );
+
         $notification = auth()->user()->unreadNotifications
             ->where('data.appointment_id', $id)
             ->first();
@@ -276,6 +281,10 @@ class LawyerController extends Controller
         $appointment->status = 'rejected';
         $appointment->save();
 
+        $appointment->user->notify(
+            new AppointmentApprovedNotification($appointment)
+        );
+
         $notification = auth()->user()->unreadNotifications
             ->where('data.appointment_id', $id)
             ->first();
@@ -296,11 +305,13 @@ class LawyerController extends Controller
 
     public function update_profile(Request $request)
     {
+
+        /** @var \App\Models\lawyer $lawyer */
         $lawyer = auth('lawyer')->user();
 
         $validate = validator($request->all(), [
             'name' => 'required|string|min:3|max:50',
-            'email' => 'required|email|unique:doctors,email,' . $lawyer->id,
+            'email' => 'required|email|unique:lawyers,email,' . $lawyer->id,
             'mobile' => 'required|string|unique:lawyers,mobile,' . $lawyer->id,
             'specialization_id' => 'required|numeric|exists:specializations,id',
             'experience' => 'required|string|min:1|max:100',

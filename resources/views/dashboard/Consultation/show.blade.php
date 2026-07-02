@@ -10,7 +10,7 @@
 @section('content')
 
     <div class="app-content">
-        <div style="height:400px;overflow-y:auto;" id="messagesBox">
+        {{-- <div style="height:400px;overflow-y:auto;" id="messagesBox">
             @foreach ($consultation->messages as $message)
                 @if ($message->sender_type == 'user')
                     <div class="d-flex justify-content-end mb-3">
@@ -25,7 +25,35 @@
                 @else
                     <div class="d-flex justify-content-start mb-3">
 
-                        <div class="bg-light p-3 rounded">
+                        <div class="bg-light p-2 rounded d-inline-block">
+
+                            {{ $message->message }}
+
+                        </div>
+
+                    </div>
+                @endif
+            @endforeach
+
+        </div> --}}
+
+        <div style="height:400px;overflow-y:auto;" id="messagesBox">
+
+            @foreach ($consultation->messages as $message)
+                @if ($message->sender_type == 'user')
+                    <div class="text-end mb-3">
+
+                        <div class="bg-primary text-white p-2 rounded d-inline-block">
+
+                            {{ $message->message }}
+
+                        </div>
+
+                    </div>
+                @else
+                    <div class="text-start mb-3">
+
+                        <div class="bg-light p-2 rounded d-inline-block">
 
                             {{ $message->message }}
 

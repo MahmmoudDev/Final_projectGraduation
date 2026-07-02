@@ -89,6 +89,14 @@ Route::middleware('auth:web')->group(function () {
         '/consultation-room/{appointment}',
         [HomeController::class, 'consultationRoom']
     )->name('front.consultation.room');
+
+    Route::get(
+        '/notification/{id}',
+        [HomeController::class, 'readNotification']
+    )->name('notification.read');
+
+
+
 });
 
 
@@ -147,6 +155,12 @@ Route::prefix('admin')
             '/get-specializations',
             [SpecializationController::class, 'getSpecialization']
         )->name('get.specializations');
+
+        Route::get(
+            '/get-providers',
+            [SpecializationController::class, 'getProviders']
+        )
+            ->name('get.providers');
 
         Route::put(
             '/contact-read/{id}',

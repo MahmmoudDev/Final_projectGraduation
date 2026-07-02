@@ -6,6 +6,7 @@ use App\Models\Appointment;
 use App\Models\consultations;
 use App\Models\doctor;
 use App\Models\specialization;
+use App\Notifications\AppointmentApprovedNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -240,6 +241,10 @@ class DoctorController extends Controller
         $appointment->status = 'approved';
         $appointment->save();
 
+        $appointment->user->notify(
+            new AppointmentApprovedNotification($appointment)
+        );
+
         $notification = auth()->user()->unreadNotifications
             ->where('data.appointment_id', $id)
             ->first();
@@ -272,6 +277,10 @@ class DoctorController extends Controller
         $appointment->status = 'rejected';
         $appointment->save();
 
+        $appointment->user->notify(
+            new AppointmentApprovedNotification($appointment)
+        );
+
         $notification = auth()->user()->unreadNotifications
             ->where('data.appointment_id', $id)
             ->first();
@@ -292,6 +301,7 @@ class DoctorController extends Controller
 
     public function update_profile(Request $request)
     {
+        /** @var \App\Models\doctor $doctor */
         $doctor = auth('doctor')->user();
 
         $request->validate([

@@ -41,13 +41,12 @@ class lawyer extends Authenticatable
     {
         return $this->hasMany(Appointment::class,  'service_provider_id');
     }
-
     public function availabilities()
     {
         return $this->hasMany(
             availabilitie::class,
             'service_provider_id'
-        );
+        )->where('service_type', 'lawyer');
     }
 
     public function consultations()

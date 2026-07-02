@@ -29,7 +29,7 @@
                   </li> --}}
 
                   <li class="nav-item">
-                      <a class="nav-link" href="{{route('front.contact')}}">Contact</a>
+                      <a class="nav-link" href="{{ route('front.contact') }}">Contact</a>
                   </li>
                   {{-- <li class="nav-item">
                       <a class="nav-link" href=""> Profile </a>
@@ -38,6 +38,88 @@
               <button onclick="toggleDarkMode()" class="dark-mode-btn mr-2" id="darkModeToggle">
                   🌙
               </button>
+
+
+
+              @php
+                  $user = Auth::guard('web')->user();
+              @endphp
+
+              @if ($user)
+
+                  <div class="dropdown me-2">
+
+
+                      <button class="notifaction-btn position-relative" type="button" data-bs-toggle="dropdown"
+                          aria-expanded="false">
+
+                          <img src="{{ asset('assetsFront/assets/img/Icon.png') }}" alt="">
+
+                          @if ($user->unreadNotifications->count() > 0)
+                              <span class="notification-count">
+
+                                  {{ $user->unreadNotifications->count() }}
+
+                              </span>
+                          @endif
+
+
+
+                      </button>
+
+                      <ul class="dropdown-menu dropdown-menu-end notification-dropdown shadow border-0">
+
+                          <li class="dropdown-header">
+                              Notifications
+                          </li>
+
+
+
+                          @forelse($user->unreadNotifications as $notification)
+                              <li>
+
+                                  <a class="dropdown-item notification-item"
+                                      href="{{ route('notification.read', $notification->id) }}">
+
+                                      @php
+                                          $approved = $notification->data['title'] == 'Appointment Approved';
+                                      @endphp
+
+                                      <div class="notification-item">
+
+                                          <span class="badge {{ $approved ? 'bg-success' : 'bg-danger' }}">
+                                              {{ $notification->data['title'] }}
+                                          </span>
+
+                                          <div class="mt-2">
+                                              {{ $notification->data['message'] }}
+                                          </div>
+
+                                          <small class="text-muted">
+                                              {{ $notification->created_at->diffForHumans() }}
+                                          </small>
+
+                                      </div>
+
+                                  </a>
+
+                              </li>
+
+                          @empty
+
+                              <li class="dropdown-item text-center">
+
+                                  No Notifications
+
+                              </li>
+                          @endforelse
+
+                      </ul>
+
+                  </div>
+
+              @endif
+
 
               @guest
 
@@ -83,7 +165,7 @@
 
                           <li>
 
-                              <a class="dropdown-item" href="{{route('myAppiontments')}}">
+                              <a class="dropdown-item" href="{{ route('myAppiontments') }}">
 
                                   My Appointments
 

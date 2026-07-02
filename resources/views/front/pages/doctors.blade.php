@@ -37,7 +37,7 @@
 
                                 <!-- Buttons -->
                                 <div class="d-flex gap-3">
-                                    <a href="{{ route('front.booking_lawyer', $item->id) }}"
+                                    <a href="{{ route('front.booking_doctor', $item->id) }}"
                                         class="book-btn w-50 text-center">
                                         Book
                                     </a>

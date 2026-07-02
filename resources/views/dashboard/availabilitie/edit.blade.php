@@ -78,7 +78,8 @@
                         <div class="input-group date" id="start_time_picker" data-target-input="nearest">
 
                             <input type="text" id="start_time" name="start_time"
-                                class="form-control datetimepicker-input" data-target="#start_time_picker" value="{{ old('start_time', $availabilitie->start_time) }}" />
+                                class="form-control datetimepicker-input" data-target="#start_time_picker"
+                                value="{{ old('start_time', $availabilitie->start_time) }}" />
 
                             <div class="input-group-append" data-target="#start_time_picker"
                                 data-toggle="datetimepicker">
@@ -99,7 +100,8 @@
                         <div class="input-group date" id="end_time_picker" data-target-input="nearest">
 
                             <input type="text" id="end_time" name="end_time"
-                                class="form-control datetimepicker-input" data-target="#end_time_picker" value="{{ old('end_time', $availabilitie->end_time) }}" />
+                                class="form-control datetimepicker-input" data-target="#end_time_picker"
+                                value="{{ old('end_time', $availabilitie->end_time) }}" />
 
                             <div class="input-group-append" data-target="#end_time_picker" data-toggle="datetimepicker">
 
@@ -185,7 +187,7 @@
                     ) {
 
                         $.ajax({
-                            url: "{{ route('get.specializations') }}",
+                            url: "{{ route('get.providers') }}",
                             type: "GET",
                             data: {
                                 type: selectedType
@@ -204,14 +206,11 @@
                                         '<option value="' +
                                         provider.id +
                                         '"' +
-                                        (
-                                            provider.id ==
-                                            selectedProviderId ?
-                                            ' selected' :
-                                            ''
-                                        ) +
+                                        (provider.id == selectedProviderId ? ' selected' : '') +
                                         '>' +
-                                        provider.id +
+                                        provider.name +
+                                        ' - ' +
+                                        provider.specialization.name +
                                         '</option>'
                                     );
                                 });

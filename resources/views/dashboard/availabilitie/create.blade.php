@@ -207,7 +207,7 @@
 
             $.ajax({
 
-                url: "{{ route('get.specializations') }}",
+                url: "{{ route('get.providers') }}",
 
                 type: "GET",
 
@@ -231,10 +231,9 @@
                     ) {
 
                         providerSelect.append(
-                            '<option value="' +
-                            provider.id +
-                            '">' +
-                            provider.name +
+                            '<option value="' + provider.id + '">' +
+                            provider.name + ' - ' +
+                            provider.specialization.name +
                             '</option>'
                         );
                     });

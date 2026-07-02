@@ -13,6 +13,7 @@ use App\Models\Appointment;
 use App\Models\availabilitie;
 use App\Models\consultations;
 use App\Notifications\NewBookingNotification;
+use Illuminate\Notifications\DatabaseNotification;
 
 class HomeController extends Controller
 {
@@ -173,6 +174,7 @@ class HomeController extends Controller
     public function lawyer_booking($id)
     {
         $lawyer = lawyer::with('availabilities')->findOrFail($id);
+        // dd($lawyer->availabilities);
 
         $availability = $lawyer->availabilities->first();
 
@@ -413,4 +415,17 @@ class HomeController extends Controller
             compact('consultation')
         );
     }
+
+    public function readNotification($id)
+    {
+        $notification = DatabaseNotification::findOrFail($id);
+
+        $notification->markAsRead();
+
+        return redirect(
+            $notification->data['url']
+        );
+    }
+
+
 }

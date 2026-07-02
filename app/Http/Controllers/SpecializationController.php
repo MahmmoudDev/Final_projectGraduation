@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\doctor;
+use App\Models\lawyer;
 use App\Models\specialization;
 use Illuminate\Http\Request;
 
@@ -138,5 +140,20 @@ class SpecializationController extends Controller
         $type = $request->query('type');
         $specializations = specialization::where('type', $type)->get();
         return response()->json($specializations);
+    }
+
+    public function getProviders(Request $request)
+    {
+        if ($request->type == 'doctor') {
+
+            return doctor::with('specialization')
+                ->get();
+        }
+
+        if ($request->type == 'lawyer') {
+
+            return lawyer::with('specialization')
+                ->get();
+        }
     }
 }
