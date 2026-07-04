@@ -30,16 +30,29 @@ class RegisteredUserController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
-        $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
-            'mobile' => [
-                'required',
-                'string',
-                'unique:users,mobile'
+
+
+        $request->validate(
+            [
+                'name' => ['required', 'string', 'max:255'],
+                'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
+                'mobile' => ['required', 'string', 'unique:users,mobile'],
+                'password' => ['required', 'confirmed', Rules\Password::defaults()],
             ],
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
-        ]);
+            [
+                'name.required' => 'الاسم الكامل مطلوب.',
+
+                'email.required' => 'البريد الإلكتروني مطلوب.',
+                'email.email' => 'يرجى إدخال بريد إلكتروني صحيح.',
+                'email.unique' => 'البريد الإلكتروني مستخدم بالفعل.',
+
+                'mobile.required' => 'رقم الجوال مطلوب.',
+                'mobile.unique' => 'رقم الجوال مستخدم بالفعل.',
+
+                'password.required' => 'كلمة المرور مطلوبة.',
+                'password.confirmed' => 'تأكيد كلمة المرور غير متطابق.',
+            ]
+        );
 
         $user = User::create([
             'name' => $request->name,
@@ -50,13 +63,11 @@ class RegisteredUserController extends Controller
 
         event(new Registered($user));
 
+
         Auth::login($user);
 
         return redirect()
-            ->route('login')
-            ->with(
-                'success',
-                'Registration completed successfully'
-            );
+            ->route('front.index')
+            ->with('success', 'تم إنشاء الحساب بنجاح ');
     }
 }

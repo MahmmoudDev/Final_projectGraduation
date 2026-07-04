@@ -77,4 +77,20 @@ class UserController extends Controller
                 : 'Failed to delete admin.'
         ]);
     }
+
+    public function toggleStatus($id)
+    {
+        $user = User::findOrFail($id);
+
+        $user->status = !$user->status;
+
+        $user->save();
+
+        return back()->with(
+            'success',
+            $user->status
+                ? 'تم تفعيل الحساب بنجاح'
+                : 'تم تعطيل الحساب بنجاح'
+        );
+    }
 }

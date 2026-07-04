@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Admin;
+use App\Models\doctor;
+use App\Models\lawyer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -15,56 +18,57 @@ class AuthController extends Controller
     public function dashboard_login(Request $request)
     {
         $credentials = [
-
             'email'    => $request->email,
             'password' => $request->password,
-
         ];
 
-        // Admin
+        $hasAccess =
+            Admin::where('email', $request->email)->exists() ||
+            doctor::where('email', $request->email)->exists() ||
+            lawyer::where('email', $request->email)->exists();
+
         if (Auth::guard('admin')->attempt($credentials)) {
 
             $request->session()->regenerate();
 
             return redirect()
                 ->route('admin.dashboard')
-                ->with(
-                    'success',
-                    'Welcome Admin'
-                );
+                ->with('success', 'Welcome Admin');
         }
 
-        // Doctor
         if (Auth::guard('doctor')->attempt($credentials)) {
 
             $request->session()->regenerate();
 
             return redirect()
                 ->route('doctor.dashboard')
-                ->with(
-                    'success',
-                    'Login successful'
-                );
+                ->with('success', 'Login successful');
         }
 
-        // Lawyer
+
         if (Auth::guard('lawyer')->attempt($credentials)) {
 
             $request->session()->regenerate();
 
             return redirect()
                 ->route('lawyer.dashboard')
-                ->with(
-                    'success',
-                    'Login successful'
-                );
+                ->with('success', 'Login successful');
+        }
+
+        if ($hasAccess) {
+
+            return back()->with(
+                'error',
+                'البريد الإلكتروني أو كلمة المرور غير صحيحة.'
+            );
         }
 
         return back()->with(
             'error',
-            'Invalid credentials'
+            'لا يوجد صلاحية لهذا الحساب.'
         );
     }
+
 
     public function logout(Request $request)
     {

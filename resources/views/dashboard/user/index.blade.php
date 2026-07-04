@@ -40,9 +40,29 @@
                                 <td>{{ $item->mobile }}</td>
 
                                 <td>
-                                    <a href="{{ route('admins.edit', $item->id) }}" class="btn btn-warning btn-sm">
-                                        <i class="fas fa-edit"></i>
-                                    </a>
+                                    <form id="toggle-status-{{ $item->id }}"
+                                        action="{{ route('users.toggleStatus', $item->id) }}" method="POST" class="d-inline">
+
+                                        @csrf
+                                        @method('PUT')
+
+                                        @if ($item->status)
+                                            <button type="button" class="btn btn-danger btn-sm"
+                                                onclick="toggleStatus({{ $item->id }}, 'تعطيل')">
+
+                                                <i class="fas fa-user-slash"></i>
+
+                                            </button>
+                                        @else
+                                            <button type="button" class="btn btn-success btn-sm"
+                                                onclick="toggleStatus({{ $item->id }}, 'تفعيل')">
+
+                                                <i class="fas fa-user-check"></i>
+
+                                            </button>
+                                        @endif
+
+                                    </form>
 
                                     <button type="button" class="btn btn-sm btn-danger "
                                         onclick="deleteUser({{ $item->id }} , this)">
@@ -101,6 +121,31 @@
                         });
                 }
             });
+
+
+        }
+
+        function toggleStatus(id, action) {
+
+            Swal.fire({
+                title: `هل أنت متأكد؟`,
+                text: `هل تريد ${action} هذا الحساب؟`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'نعم',
+                cancelButtonText: 'إلغاء'
+            }).then((result) => {
+
+                if (result.isConfirmed) {
+
+                    document.getElementById('toggle-status-' + id).submit();
+
+                }
+
+            });
+
         }
     </script>
 @endsection

@@ -24,6 +24,14 @@
 
                                 @csrf
 
+                                @if ($errors->any())
+                                    <script>
+                                        @foreach ($errors->all() as $error)
+                                            toastr.error("{{ $error }}");
+                                        @endforeach
+                                    </script>
+                                @endif
+
                                 <div class="mb-3">
 
                                     <label class="form-label">

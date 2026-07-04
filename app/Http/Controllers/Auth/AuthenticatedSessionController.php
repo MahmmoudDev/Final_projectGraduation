@@ -29,13 +29,23 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
+
+        if (! auth()->user()->status) {
+
+            Auth::logout();
+
+            return back()->with(
+                'error',
+                'تم تعطيل هذا الحساب، يرجى التواصل مع الإدارة.'
+            );
+        }
         return redirect()
             ->intended(
                 RouteServiceProvider::HOME
             )
             ->with(
                 'success',
-                'Login successful'
+                'تم تسجيل الدخول بنجاح '
             );
     }
 

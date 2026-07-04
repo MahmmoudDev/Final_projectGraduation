@@ -40,23 +40,13 @@
 
                         </p>
 
+
+
                         <form method="POST" action="{{ route('register') }}">
 
                             @csrf
 
-                            @if ($errors->any())
-
-                                <div class="alert alert-danger">
-
-                                    @foreach ($errors->all() as $error)
-                                        <div>
-                                            {{ $error }}
-                                        </div>
-                                    @endforeach
-
-                                </div>
-
-                            @endif
+                           
 
 
                             <div class="mb-3">
@@ -66,7 +56,7 @@
                                 </label>
 
                                 <input type="text" name="name" class="form-control auth-input"
-                                    placeholder="Enter full name" value="{{ old('name') }}" required>
+                                    placeholder="Enter full name" >
 
                             </div>
 
@@ -78,7 +68,7 @@
                                 </label>
 
                                 <input type="email" name="email" class="form-control auth-input"
-                                    placeholder="Enter email" value="{{ old('email') }}" required>
+                                    placeholder="Enter email" >
 
                             </div>
 
@@ -89,7 +79,7 @@
                                 </label>
 
                                 <input type="text" name="mobile" class="form-control auth-input"
-                                    placeholder="Enter mobile number" required>
+                                    placeholder="Enter mobile number">
 
                             </div>
 
@@ -101,7 +91,7 @@
                                 </label>
 
                                 <input type="password" name="password" class="form-control auth-input"
-                                    placeholder="Enter password" required>
+                                    placeholder="Enter password">
 
                             </div>
 
@@ -113,7 +103,7 @@
                                 </label>
 
                                 <input type="password" name="password_confirmation" class="form-control auth-input"
-                                    placeholder="Confirm password" required>
+                                    placeholder="Confirm password">
 
                             </div>
 

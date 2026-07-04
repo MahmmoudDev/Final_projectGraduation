@@ -21,6 +21,7 @@ class DoctorController extends Controller
     {
         //
         $doctors = doctor::with('specialization')->latest()->paginate(5);
+
         return response()->view('dashboard.doctor.index', ['doctors' => $doctors]);
     }
 
@@ -223,10 +224,41 @@ class DoctorController extends Controller
             ->latest()
             ->paginate(5);
 
+
+
+        $totalAppointments = Appointment::where('service_provider_id', $doctorId)
+            ->where('service_type', 'doctor')
+            ->count();
+
+        $pendingAppointments = Appointment::where('service_provider_id', $doctorId)
+            ->where('service_type', 'doctor')
+            ->where('status', 'pending')
+            ->count();
+
+        $approvedAppointments = Appointment::where('service_provider_id', $doctorId)
+            ->where('service_type', 'doctor')
+            ->where('status', 'approved')
+            ->count();
+
+        $cancelledAppointments = Appointment::where('service_provider_id', $doctorId)
+            ->where('service_type', 'doctor')
+            ->where('status', 'cancelled')
+            ->count();
+
+        $rejectedAppointments = Appointment::where('service_provider_id', $doctorId)
+            ->where('service_type', 'doctor')
+            ->where('status', 'rejected')
+            ->count();
+
         return view(
             'dashboard.doctor.dashboard',
             compact(
-                'appointments'
+                'appointments',
+                'totalAppointments',
+                'pendingAppointments',
+                'approvedAppointments',
+                'cancelledAppointments',
+                'rejectedAppointments'
             )
         );
     }

@@ -94,9 +94,6 @@ Route::middleware('auth:web')->group(function () {
         '/notification/{id}',
         [HomeController::class, 'readNotification']
     )->name('notification.read');
-
-
-
 });
 
 
@@ -166,6 +163,10 @@ Route::prefix('admin')
             '/contact-read/{id}',
             [ContactController::class, 'markAsRead']
         )->name('contact.read');
+
+
+        Route::put('/users/{id}/toggle-status', [UserController::class, 'toggleStatus'])
+            ->name('users.toggleStatus');
     });
 
 

@@ -196,15 +196,26 @@
                                 </td>
 
                                 <td>
-                                    @if ($item->status == 'cancelled')
+
+                                    @if ($item->status == 'pending')
+                                        <span class="badge bg-warning">
+                                            Pending
+                                        </span>
+                                    @elseif($item->status == 'approved')
+                                        <span class="badge bg-success">
+                                            Approved
+                                        </span>
+                                    @elseif($item->status == 'rejected')
                                         <span class="badge bg-danger">
+                                            Rejected
+                                        </span>
+                                    @elseif($item->status == 'cancelled')
+                                        <span class="badge bg-secondary">
                                             Cancelled
                                         </span>
                                     @else
-                                        <span class="badge bg-warning">
-
-                                            {{ $item->status }}
-
+                                        <span class="badge bg-dark">
+                                            {{ ucfirst($item->status) }}
                                         </span>
                                     @endif
 
@@ -227,40 +238,7 @@
                             </tr>
                         @endforeach
 
-                    </tbody>
 
-
-
-                    {{-- @foreach ($doctors as $item)
-                                <tr>
-                                    <td>{{ $item->id }}</td>
-                                    <td>{{ $item->name }}</td>
-                                    <td>{{ $item->email }}</td>
-                                    <td>{{ $item->mobile }}</td>
-                                    <td>
-                                        @if ($item->image)
-                                            <img src="{{ asset('storage/doctors/' . $item->image) }}" alt="Doctor Image"
-                                                class="img-thumbnail" style="width: 80px; height: 80px; object-fit: cover;">
-                                        @else
-                                            <span>No Image</span>
-                                        @endif
-                                    </td>
-                                    <td>{{ $item->specialization->name }}</td>
-                                    <td>{{ $item->experience }}</td>
-                                    <td>{{ $item->status }}</td>
-                                    <td>
-                                        <a href="{{ route('doctors.edit', $item->id) }}" class="btn btn-warning btn-sm">
-                                            <i class="fas fa-edit"></i>
-                                        </a>
-
-                                        <button type="button" class="btn btn-sm btn-danger "
-                                            onclick="deleteDoctor({{ $item->id }} , this)">
-                                            <i class="fa-solid fa-trash"></i>
-                                        </button>
-                                    </td>
-
-                                </tr>
-                            @endforeach --}}
                     </tbody>
 
                 </table>

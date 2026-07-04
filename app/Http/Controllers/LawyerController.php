@@ -231,6 +231,42 @@ class LawyerController extends Controller
             ->latest()
             ->get();
 
+        $totalAppointments = Appointment::where('service_provider_id', $lawyerId)
+            ->where('service_type', 'lawyer')
+            ->count();
+
+        $pendingAppointments = Appointment::where('service_provider_id', $lawyerId)
+            ->where('service_type', 'lawyer')
+            ->where('status', 'pending')
+            ->count();
+
+        $approvedAppointments = Appointment::where('service_provider_id', $lawyerId)
+            ->where('service_type', 'lawyer')
+            ->where('status', 'approved')
+            ->count();
+
+        $cancelledAppointments = Appointment::where('service_provider_id', $lawyerId)
+            ->where('service_type', 'lawyer')
+            ->where('status', 'cancelled')
+            ->count();
+
+        $rejectedAppointments = Appointment::where('service_provider_id', $lawyerId)
+            ->where('service_type', 'lawyer')
+            ->where('status', 'rejected')
+            ->count();
+
+        return view(
+            'dashboard.lawyer.dashboard',
+            compact(
+                'appointments',
+                'totalAppointments',
+                'pendingAppointments',
+                'approvedAppointments',
+                'cancelledAppointments',
+                'rejectedAppointments'
+            )
+        );
+
         return view(
             'dashboard.lawyer.dashboard',
             compact(
